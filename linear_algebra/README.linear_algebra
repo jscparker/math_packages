@@ -1,0 +1,150 @@
+
+Directory /Linear_Algebra contains several
+
+   numberical linear algebra routines for real-valued matrices:
+
+      QR_Symmetric_Eigen (Eigendecomposition for symmetric matrices.)
+      Peters_Eigen       (Eigendecomposition for general square matrices.)
+      Golub_SVD          (SVD decomposition for rectangular matrices.)
+      Givens_QR          (QR decomposition for rectangular matrices.)
+      Jacobi_Eigen       (Jacobi eigendecomposition for symmetric matrices.)
+      Cholesky_LU        (Cholesky LU decomposition for positive definite matrices.)
+      Crout_LU           (Crout LU decomposition for square matrices.)
+      Banded_LU          (Crout LU decomposition for banded matrices.)
+      Hessenberg         (Hessenberg decomposition using Givens rotations.)
+      Tridiagonal        (Tridiagonalization of symmetric matrices.)
+
+   Several of the routines are optimized for numerical accuracy, none
+   for speed. Enhanced Givens rotations are used everywhere (except in the LU
+   decompositions). Enhanced Givens rotations are sluggish, but improve
+   numerical accuracy. Reliability is generally favored over speed.
+
+Information specific to particular routines
+
+   is found at the top of the .ads files.  
+   Test routines also serve as demo routines. For example:
+
+      peters_qr_tst_1.adb
+      peters_qr_tst_2.adb
+      peters_qr_tst_3.adb
+      qr_symmetric_eigen_tst_1.adb
+      peters_eigen_tst_1.adb
+      golub_svd_tst_1.adb
+      golub_svd_tst_2.adb
+      jacobi_eigen_tst_1.adb
+      jacobi_eigen_tst_2.adb
+      cholesky_lu_tst_1.adb
+      crout_lu_tst_1.adb
+      crout_lu_tst_2.adb
+
+Segmentation fault in Linux
+
+   is sometimes due to insufficient stack mem for
+   large matrices. Read up on: ulimit for bash shell.
+   For csh I seem to recall it's: limit stacksize unlimited.
+
+   in BASH:   
+     ulimit -s unlimited
+     (type "ulimit -s" to see stack setting.  The "s" is for stack.)
+     (type "ulimit -a" to see all settings.)
+
+   in CSH try:
+     limit stacksize unlimited
+     limit datasize unlimited
+     (type "limit" to see settings.)
+
+GNAT Compilation:
+       
+    type
+
+        gnatmake
+
+    at the command prompt to get summary of gnat compiler switches.
+    Here are a few:
+
+       -gnato  = overflow check;  
+       -gnatVa = do all validity checks;  
+       -gnata  = check all assertions;
+       -fstack-check (gcc compiler flag)
+
+    for testing:
+
+       gnatmake -Wall -gnatwa -gnatVa -gnata -gnato -fstack-check -gnateE xxx.adb
+
+    for speed:
+
+       gnatmake -gnatnp -O3 -ffast-math -funroll-loops -march=native xxx.adb
+
+    The -ffast-math switch usually doesn't help, but in one case (Golub_SVD) it's
+    big improvement. In other cases  -ffast-math can degrade numerical accuracy.
+
+    The switch -gnatN aggressively inlines, which is problem if you are calling
+    the compiler's random number generators. Apparently the presence of some
+    SPARK directives in the random number generators means that inlining is
+    disallowed, and compilation fails in these cases.
+
+Notes on Notation
+
+   The row and column ranges of a matrix are usually named Row_Index, Col_Index:
+
+      subtype Row_Index is Integer range 0 .. 1024;
+      subtype Col_Index is Integer range 0 .. 100;
+
+   Sometimes its:  R_Index, C_Index.
+
+   Arbitrary input matrices in linear algebra are called A.  
+   This will never change. Its like alice and bob in cryptography.
+
+      type A_Matrix is array(Row_Index, Col_Index) of Real;
+      A : A_Matrix;
+
+   Orthogonal matrices are usually called Q, U, or V. That's where the Q 
+   comes from in the QR decomposition of matrix A = Q*R, or the V in the 
+   SVD of A = U*W*V'. (The U probably stands for Unitary.) In the
+   SVD we use real numbers, so U is orthogonal as well as unitary: U'*U = I.
+
+      U : U_Matrix;
+      Q : Q_Matrix;
+
+  Upper (right) triangular are R, etc.
+
+      R : Matrix;
+
+   Rows of numbers found in a matrix, and columns of numbers found in 
+   a matrix are called Row_Vector and Col_Vector respectively.  Notice that
+   the elements of a Row_Vector are indexed by indices that id the column in
+   in the matrix that the element resides in. A Col_Vector of a matrix is 
+   indexed by indices that id the row that the matrix element resides in.
+   That is how linear algebra works. So:
+
+      type Row_Vector is array(Col_Index) of Real;
+      type Col_Vector is array(Row_Index) of Real;
+
+   Since we use the term "Vector" to name the rows and the columns of a matrix,
+   we can call the indices of an element of a matrix  (Row, Col).
+   The element of matrix A at position (Row, Col) is
+      A(Row, Col) 
+
+   Or:
+
+      A(r, c) 
+      A(i, j) 
+
+   Some routines operate on an arbitrary submatrices of matrix A. The
+   corners (r, c) of this submatrix are given by:
+
+     (Starting_Row, Starting_Col)  -> to the eye, this is the upper left  corner.
+     (Final_Row, Final_Col)        -> to the eye, this is the lower right corner.
+
+   Standard terminology: rectangular matrices are said to be m x n: m rows and 
+   n columns.  Row always comes before Col.  
+
+      m = Final_Row - Starting_Row + 1
+      n = Final_Col - Starting_Col + 1
+
+   In comments statements, transpose of matrix A is written A'.
+   In code, transpose of matrix A is often written A_tr.  
+
+      Transpose(A) == A'.
+      Transpose(A) == A_tr
+

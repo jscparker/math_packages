@@ -1,0 +1,25 @@
+
+directory Ordinary contains:
+   several routines for integrating ordinary differential equations.
+
+package Runge_8th contains:
+   the classic Prince-Dormand 8th order Runge-Kutta integrator.
+   I've found it to be very useful general-purpose integrator. It
+   can be used with static integration step-sizes, or optionally,
+   with error-control enabled and variable step-sizes.
+
+package Runge_5th contains:
+   the Prince-Dormand 5th order Runge-Kutta integrator.
+
+package Predictor_1 contains:
+   a 17th order Predictor-Corrector integrator for general ordinary
+   differential equations: (d/dt) Y(t) = F(t, Y).
+
+package Predictor_2 contains:
+   a 20th order Predictor-Corrector integrator for conservative
+   differential equations: (d/dt)^2 Y(t) = F(t, Y).
+
+   Several Demo/Test routines that demonstrate the relative merits
+     of the different methods.
+
+

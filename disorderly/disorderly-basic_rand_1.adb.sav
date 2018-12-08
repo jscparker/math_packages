@@ -1,0 +1,661 @@
+
+-----------------------------------------------------------------------
+-- package Disorderly.Basic_Rand, Linear Random Number Generator
+-- Copyright (C) 2008-2009 Jonathan S. Parker.
+--
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see  http://www.gnu.org/licenses/
+--
+-- As a special exception, if other files instantiate generics from
+-- this unit, or you link this unit with other files to produce an
+-- executable, this  unit  does not  by itself cause  the resulting
+-- executable to be covered by the GNU General Public License. This
+-- exception does not however invalidate any other reasons why the
+-- executable file  might be covered by the  GNU Public License.
+-----------------------------------------------------------------------
+
+package body Disorderly.Basic_Rand
+   with Spark_Mode => On
+is
+  --  The state (composed of 3 x 64 bits) is contained in an array of 3
+  --  64 bit ints indexed by the following 3 ints:
+
+  MWC_id_0     : constant State_Index := 0;
+  MWC_id_1     : constant State_Index := 1;
+  Xor_Shift_id : constant State_Index := 2;
+
+  -----------------------------------
+  -- Multiply_with_Carry_Constants --
+  -----------------------------------
+
+  -- MULTIPLY WITH CARRY:
+  --
+  -- want a*x mod (a*b-1)
+  --
+  -- use g*c mod(c-1) = g mod(c-1)
+  --     a*x mod(a*b) = a*(x mod b)  (using x = (x/b)*b + x mod b)
+  --
+  --     z = z mod c + (z/c)*c
+  --     z mod (c-1) = (z mod c + (z/c)) mod (c-1)
+  --
+  --  let c = a*b, z = a*x
+  --     a*x mod (a*b-1) = [a*(x mod b)  + x/b] mod (a*b-1)
+  --
+  --  or say:     x = x_hi*b + x_lo
+  --
+  --    a*x mod (a*b-1) = [(a*b)*x_hi + a*x_lo] mod (a*b-1).
+  --
+  --                    = x_hi mod (a*b-1) +  a*x_lo mod (a*b-1)
+  --                    = [x_hi + a*x_lo] mod (a*b-1)
+  --
+  --    x_hi = x mod (b) and x_lo = x / b.
+  --
+  --  x = a*b-1, and x=0 produce streams of period = 1.
+  --  x_hi + a*x_lo reaches max of a*b-1 when x = a*b-1.
+  --
+  --  x is in [1 .. ab-2].   NOTE (ab-2) / 2 is also prime.
+  --  x/b = (ab-2)/b = ((a-1)b + b-2)/b = a-1.
+  --  x mod b = (ab-2) mod b = ((a-1)b + b-2) mod b = b-2
+  --  So if x = ab-2, then x_hi + a*x_lo = a-1  + a*(b-2)
+  --
+  --
+  -- EVALUATING  x mod (2**n - k).
+  --
+  --     (for example in an LCG you want:    a*y mod (2**n - k)
+  --
+  --      b = 2**n = base
+  --
+  --      write x in base b:  x = (x/b)*b + x mod b
+  --
+  --      x mod m = ((x/b)*b + x mod b) mod (b - k)
+  --              = ((x/b)*k)  + (x/b)*(b - k) + (x mod b)) mod  (b - k)
+  --              = ((x/b)*k) + (x mod b)) mod  (b - k)
+  --
+  -- e.g.  b = 2**32 and k = 5.
+  --
+  --
+  --
+  -- VERIFIED SAFE PRIMES:
+  --
+  --
+  --  Do[ If[ PrimeQ[a*(2^32)  - 1] &&
+  --          PrimeQ[(a*(2^32) - 1 - 1)/2]  ,
+  --          Print[(a*(2^32)  - 1), "  ", a, "  ",
+  --                  ((a - 1594719654)*1.81338)], Null ],
+  --          {a, 1594719654 - 30000, 1594719654 + 0000}]
+  --
+  --
+  --    ratio of periods   = (1+sqrt(5))/2       (1.618033..  golden mean)
+  --    product of periods =  2^124 * 0.9999999960368
+  --
+  --    (7250911033471008767*11732400383950061567) / 2^126   = 0.9999999960368
+  --
+  --  b=2**32
+  --
+  --  m0 = 11732400383950061567  a0 = 2731662333
+  --  m1 = 7250911033471008767   a1 = 1688234283
+  --
+
+   package Multiply_with_Carry_Constants
+   with
+      SPARK_Mode => On
+   is
+
+     --  If a single parameter mutates, the generator fails, so assert thrice.
+     --
+     b0 : constant := 2**32;
+     a0 : constant := 2731662333; -- a0 must be the larger a
+     pragma Assert ((a0 = 2731662333) and (a0 = 2731662333) and (a0 = 2731662333));
+     pragma Assert ((b0 = 2**32) and (b0 = 2**32) and (b0 = 2**32));
+     -- modulus not period:  m0 = 11732400383950061567  a0 = 2731662333
+
+     b1 : constant := 2**32;
+     a1 : constant := 1688234283;
+     pragma Assert ((a1 = 1688234283) and (a1 = 1688234283) and (a1 = 1688234283));
+     pragma Assert ((b1 = 2**32) and (b1 = 2**32) and (b1 = 2**32));
+     -- modulus not period:  m1 = a1*2^32-1 = 7250911033471008767   a1 = 1688234283
+
+     --  Ratio of periods = golden mean, just for fun.
+     --  Period: (7250911033471008767*11732400383950061567)/4 = 2^124 * 0.99999999604
+     --
+     --b0 : constant := 2**32-5;
+     --a0 : constant := 2731663104; -- a0 must be the larger a
+     --pragma Assert ((a0 = 2731663104) and (a0 = 2731663104) and (a0 = 2731663104));
+     --pragma Assert ((b0 = 2**32-5) and (b0 = 2**32-5) and (b0 = 2**32-5));
+     -- m0 = a0*(2^32-5)-1 =  11732403681711531263
+
+     m0 : constant :=  a0 * b0 - 1;  -- LCG modulus (safe prime)
+     m1 : constant :=  a1 * b1 - 1;  -- LCG modulus (safe prime)
+
+     --p0 : constant := (m0 - 1) / 2; -- period (prime)
+     --p1 : constant := (m1 - 1) / 2; -- period (prime)
+
+     pragma Assert (a0 < b0);
+     pragma Assert (a1 < b1);
+     pragma Assert (a1 < a0);
+     pragma Assert ((a1/2)*2 < a1);  -- but only for b1 = 2^32
+
+     pragma Assert (m0 < Parent_Random_Int'Last);
+     pragma Assert (m1 < Parent_Random_Int'Last);
+
+     pragma Assert (m0 > Random_Int'Last + 1);  -- for Reset to work.
+     pragma Assert (m1 > Random_Int'Last + 1);  -- ie m1 > 2**61
+
+  end Multiply_with_Carry_Constants;
+
+  -------------------------
+  -- Get_Random_MWC_64_2 --
+  -------------------------
+
+  -- Marsaglia-Zaman multiply-with-carry algorithm is used to construct
+  -- two LCG's (linear congruential generators) with prime number moduli.
+  -- The 2 prime number moduli p1 and p2 satisfy p1*p2 ~ 2^p. They are
+  -- combined to make a generator uniform on 0..2**p-1.
+  -- They're not really LCG's.
+  -- A slight modification at the end makes each of the 2 LCG's full-period,
+  -- so that they can be combined in way that mixes bits rather more
+  -- strongly than simple addition (modulo some prime), and ensures very
+  -- high degree of uniformity on 0 .. 2**p-1.
+  -- Reminder: The full 63+ bits produced by a single MWC generator
+  -- should never be used alone. (The lower 32 bits are pretty good, but
+  -- its the combination generator below that meets minimal standards.)
+
+--  procedure Get_Random_MWC_64_2
+--    (Random_x :    out Parent_Random_Int;
+--     S        : in out State)
+--  is
+--     S_lo, S_hi : Parent_Random_Int;
+--     S0, S1     : Parent_Random_Int;
+--
+--     use Multiply_with_Carry_Constants;
+--
+--  begin
+--
+--     S_hi   := S.X(MWC_id_0)  /  b0;
+--     S_lo   := S.X(MWC_id_0) mod b0;
+--     S0     := a0 * S_lo + S_hi;
+--
+--     S.X(MWC_id_0) := S0;
+--
+--
+--     --  S0 is in  1 .. m0-1.   m0-1 equals 2*p0, where p0 is prime.
+--
+--     if S0 > p0 then
+--       S0 := m0 - S0 - 1;
+--     else
+--       S0 := S0 - 1;
+--     end if;
+--     --  Each number in range  0 .. p0-1  appears exactly once during period p0.
+--     --  So S0 is full-period with prime number period p0.
+--     --  (If x=p+1,  m - x = 2p+1  - (p+1)  = p, so m-x-1 = p-1.)
+--
+--
+--     S_hi   := S.X(MWC_id_1)  /  b1;
+--     S_lo   := S.X(MWC_id_1) mod b1;
+--     S1     := a1 * S_lo + S_hi;
+--
+--     S.X(MWC_id_1) := S1;
+--
+--     if S1 > p1 then
+--       S1 := m1 - S1 - 1;
+--     else
+--       S1 := S1 - 1;
+--     end if;
+--     --  Now S1 is in  0 .. p1-1
+--
+--     Random_x := S0 + p0 * S1;
+--
+--     -- Requires modular arithmetic, 2^n = 2^64. Requires p0 > p1.
+--     -- The above is equivalent to doing the arithmetic in full precision,
+--     -- followed by mod 2^64, because (with for example m = 2^64):
+--     --   (a*b + c) mod m = ((a mod m) * (b mod m) + c mod m) mod m.
+--     -- This is ok because we are going to  mod 2^61  it as a final step.
+--     -- In full precision math, Random_x here would return all nums in range
+--     -- 0 .. (p0*p1-1) exactly once during  period = p0*p1. For example,
+--     -- if x0 and x1 are produced by full period rearrangement generators:
+--     --    x0 in 0..9, with period p0 = 10, and
+--     --    x1 in 0..6, with period p1 = 7, then
+--     -- you'ld get z = x0 + p0*x1 in range 0 .. 69, no missing nums during
+--     -- period of 70. So z is produced with period p0*p1 = 70, and the new
+--     -- generator is a full period rearrangement generator: each number in
+--     -- the range 0..69 appears exactly once during each period of length 70.
+--
+--  end Get_Random_MWC_64_2;
+--
+--  pragma Inline (Get_Random_MWC_64_2);
+
+  -------------------------
+  -- Get_Random_MWC_64_x --
+  -------------------------
+
+  -- Stnd Zaman Marsalglia multiply-with-carry LCG: just use the
+  -- lower 30 or 31 bits of 2 generators and concatenate to get greater
+  -- than 61 bits; there's nothing wrong with this - passes all the
+  -- usual tests. The bits are nearly uniform because we only use the
+  -- lower 31 or 30 bits of 63 or 62 bit nums.
+
+  procedure Get_Random_MWC_64_x
+    (Random_x :    out Parent_Random_Int;
+     S        : in out State)
+  with
+     Spark_Mode => On
+  is
+     S_lo, S_hi : Parent_Random_Int;
+     S0, S1     : Parent_Random_Int;
+
+     use Multiply_with_Carry_Constants;
+
+  begin
+
+     S_hi   := S.X(MWC_id_0)  /  b0;
+     S_lo   := S.X(MWC_id_0) mod b0;
+     S0     := a0 * S_lo + S_hi;
+
+     S.X(MWC_id_0) := S0;
+
+     S_hi   := S.X(MWC_id_1)  /  b1;
+     S_lo   := S.X(MWC_id_1) mod b1;
+     S1     := a1 * S_lo + S_hi;
+
+     S.X(MWC_id_1) := S1;
+
+     -- concatenate 31 bits from S0, + 30 from S1 on range 0..x (shifted 31 bits):
+
+     Random_x := (S0 mod 2**31) + (S1 - 1) * 2**31;    -- type Parent_Random_Int
+
+  end Get_Random_MWC_64_x;
+
+  pragma Inline (Get_Random_MWC_64_x);
+
+  -----------------------------
+  -- Get_Random_XOR_Shift_61 --
+  -----------------------------
+
+  -- Marsaglia's XOR-SHIFT generator mixes bits by the following recipe:
+  --
+  --  S2  := (S2 XOR (S2 * 2**20))mod 2**61; (a shift-left-by-20  step)
+  --  S2  :=  S2 XOR (S2 / 2**32);           (a shift-right-by-32 step)
+  --
+  -- Marsaglia's Algorithm is used to find shifts that yield generators with
+  -- full (prime) period of 2**61-1.  The following are full period shifts that
+  -- get best scores on a stringent avalanche test.  (But you really need about
+  -- 12 of these shifts to get best resemblance of true randomness. There are
+  -- other deficiencies in the XOR-SHIFT generator that can never be removed
+  -- by adding more xor-shifts, so we stop at 8 and use it as part of a
+  -- combination generator.)
+  --
+  -- best 8's:  1 3 6 13 21 29 31 12             57 59 2
+  --            1 3 7 15 30 32 20 6              56 58 2 (preferred)
+  --            1 3 7 16 21 30 26 6              55 55 0
+  --            1 3 9 16 21 23 23 1              43 54 11 (looks promising)
+  --            1 3 12 18 23 25 29 15            61 65 4
+  --            1 3 13 24 31 35 8 1              63 53 10
+  -- 8 or less is probably appropriate for combination generator.
+
+
+  procedure Get_Random_XOR_Shift_61
+    (Random_x :    out Random_Int;
+     S        : in out State)
+  with
+     Spark_Mode => On
+  is
+     X2 : Parent_Random_Int;
+
+     S8 : constant := 6;  S7 : constant := 20; S6 : constant := 32;
+     S5 : constant := 30; S4 : constant := 15; S3 : constant := 7;
+     S2 : constant := 3;  S1 : constant := 1;
+
+     --  Error detection is by assertion:
+
+     pragma Assert
+      (S8=6 and S7=20 and S6=32 and S5=30 and S4=15 and S3=7 and S2=3 and S1=1);
+
+     --  Error correction is by inspection:
+     --  (if mutated parameters are detected, use data given below to correct).
+     --   1 3 7 15 30 32 20 6
+     --   1 3 7 15 30 32 20 6
+     --   1 3 7 15 30 32 20 6
+
+  begin
+
+     X2  := S.X(Xor_Shift_id);
+     X2  :=  X2 XOR (X2 / 2**S8);
+     X2  := (X2 XOR (X2 * 2**S7))mod 2**61;
+     X2  :=  X2 XOR (X2 / 2**S6);
+     X2  := (X2 XOR (X2 * 2**S5))mod 2**61;
+     X2  :=  X2 XOR (X2 / 2**S4);
+     X2  := (X2 XOR (X2 * 2**S3))mod 2**61;
+     X2  :=  X2 XOR (X2 / 2**S2);
+     X2  := (X2 XOR (X2 * 2**S1))mod 2**61;
+
+     Random_x := X2 mod 2**61;
+
+     S.X(Xor_Shift_id) := Random_x;
+
+  end Get_Random_XOR_Shift_61;
+
+  ----------------
+  -- Get_Random --
+  ----------------
+
+  --  Get_Random is a combination generator: 2 component generators x, and y
+  --  are combined to produce a generator z whose period is the product of
+  --  the periods of x, and y.  z is generated by z = (x + y) mod p,
+  --  where y is full period in range 0..p-1, and the periods of the
+  --  generators for x and y have no prime factors in common.
+  --  Only one of the two generators x and y
+  --  needs to be full-period to guarantee a full-period z.
+
+  procedure Get_Random
+    (Random_x :    out Random_Int;
+     S        : in out State)
+  with
+     Spark_Mode => On
+  is
+     X1, X2 : Parent_Random_Int;
+  begin
+   --Get_Random_MWC_64_2 (X1, S); 
+   -- Slower but higher degree of uniformity than below; all the bits in the final
+   -- result will be full-period. The alternative below results in a generator
+   -- in which the bits have 1/2 the period of the full generator.
+
+     Get_Random_MWC_64_x (X1, S); -- faster.
+     Get_Random_XOR_Shift_61 (X2, S);
+
+     Random_x := Random_Int ((X1 + X2) mod 2**61);
+
+  end Get_Random;
+
+  -----------
+  -- Reset --
+  -----------
+
+  -- Step 1. Guarantee that each unique and valid choice
+  -- of the Initiators (Initiator1, Initiator2, .. )
+  -- produces a unique and valid initial state S: S.X(0), S.X(1), ...
+  --
+  -- Step 2. Guarantee that a change of 1 bit or more in any one Initiator
+  -- will cause changes in all elements of the initial state S: S.X(0), S.X(1), ...
+  --
+  procedure Reset
+    (S          :    out State;
+     Initiator1 : in     Seed_Random_Int := 1111;
+     Initiator2 : in     Seed_Random_Int := 2222;
+     Initiator3 : in     Seed_Random_Int := 3333)
+  is
+
+     Seeds : Vals := (Initiator1, Initiator2, Initiator3);
+
+     Chomp, Seed, X2 : Parent_Random_Int;
+     Chomp_Shift_Length : constant Integer := (1 + Bits_per_Random_Number / S.X'Length);
+
+     --  the transpose requires:
+
+     pragma Assert (State_Index'First = 0);
+     pragma Assert (S.X'Length < 9);
+     pragma Assert (Random_Int'Last = 2**Bits_per_Random_Number-1);
+     pragma Assert (Bits_per_Random_Number = 61);
+
+     use Multiply_with_Carry_Constants;
+
+     S8 : constant := 15; S7 : constant := 29; S6 : constant := 25;
+     S5 : constant := 23; S4 : constant := 18; S3 : constant := 12;
+     S2 : constant := 3;  S1 : constant := 1;
+
+     pragma Assert
+      (S8=15 and S7=29 and S6=25 and S5=23 and S4=18 and S3=12 and S2=3 and S1=1);
+     --  if mutated parameters are detected, use data given in Step 1 to correct.
+
+  begin
+
+--     for i in State_Index loop
+--        if not Seeds(i)'Valid then raise Constraint_Error; end if;
+--     end loop;
+
+     -- Keep scrambling until S.X(2) /= 0:
+
+     Get_non_Zero_State:
+     for Keep_Trying in 1..17 loop  -- astronomically unlikely this will take >2 tries
+
+        -- Step 1:
+        -- Start by transforming each seed with a function
+        -- that is a 1-1 mapping between all elements of 0..2**61-1.
+        -- (0 maps to 0, but is weeded out).
+        --
+        -- period = 2**61-1: maps 0 to 0 but thats ok
+        --                   1 3 12 18 23 25 29 15
+        --                   1 3 12 18 23 25 29 15
+
+        for i in State_Index loop
+           X2 := Seeds(i);
+           X2  :=  X2 XOR (X2 / 2**S8);
+           X2  := (X2 XOR (X2 * 2**S7))mod 2**61;
+           X2  :=  X2 XOR (X2 / 2**S6);
+           X2  := (X2 XOR (X2 * 2**S5))mod 2**61;
+           X2  :=  X2 XOR (X2 / 2**S4);
+           X2  := (X2 XOR (X2 * 2**S3))mod 2**61;
+           X2  :=  X2 XOR (X2 / 2**S2);
+           X2  := (X2 XOR (X2 * 2**S1))mod 2**61;
+           Seeds(i) := X2;
+        end loop;
+
+
+        -- Step 2:
+        -- Make an N x N matrix out of the N elements of array Seed
+        -- (by breaking each element into N Parts), and transpose it;
+        -- write it to to the state S.X:
+
+        S.X := (others => 0);
+
+        for j in State_Index loop
+
+           Seed := Seeds(j);
+
+           for i in State_Index loop
+              Chomp  := Seed MOD 2**Chomp_Shift_Length;
+              S.X(i) := S.X(i) + Chomp * 2**(j*Chomp_Shift_Length);
+              Seed   := Seed / 2**Chomp_Shift_Length;
+           end loop;
+
+        end loop;
+
+        -- Scramble the state S.X again:
+
+        for i in State_Index loop
+           X2 := S.X(i);
+           X2  :=  X2 XOR (X2 / 2**S8);
+           X2  := (X2 XOR (X2 * 2**S7))mod 2**61;
+           X2  :=  X2 XOR (X2 / 2**S6);
+           X2  := (X2 XOR (X2 * 2**S5))mod 2**61;
+           X2  :=  X2 XOR (X2 / 2**S4);
+           X2  := (X2 XOR (X2 * 2**S3))mod 2**61;
+           X2  :=  X2 XOR (X2 / 2**S2);
+           X2  := (X2 XOR (X2 * 2**S1))mod 2**61;
+           S.X(i) := X2;
+        end loop;
+
+        if Keep_Trying > 1 and then S.X(Xor_Shift_id) /= 0 then
+           exit Get_non_Zero_State;
+        else
+           Seeds := S.X; -- use the new seeds and scramble again.
+        end if;
+
+     end loop Get_non_Zero_State;
+
+
+     -- Step 3: Error correction.
+     --
+     -- Weed out Seed values that give a period of 1 to component generators.
+     -- And note that S.X is in 0..2^61-1, so should have S.X < a0 * b0 - 1.
+
+     for i in State_Index range MWC_id_0 .. MWC_id_1 loop
+     if S.X(i) = 0 then                 -- Period=1
+        S.X(i) := Random_Int'Last + 1;  -- Is valid init as asserted above
+     end if;
+     end loop;
+
+--     if S.X(MWC_id_0) = (a0 * b0 - 1) then -- Period=1
+--        raise Constraint_Error;  -- can't happen, if assertion governing a0 is enforced
+--     end if;
+--
+--     if S.X(MWC_id_1) = (a1 * b1 - 1) then -- Period=1
+--        raise Constraint_Error;  -- can't happen, if assertion governing a1 is enforced
+--     end if;
+
+     --  xor/shift: already done.
+     --if S.X(Xor_Shift_id) = 0 then
+        --S.X(Xor_Shift_id) := Random_Int'Last;
+     --end if;
+
+  end Reset;
+
+
+  subtype Character_Digit is Character range '0' .. '9';
+  subtype Integer_Digit   is Parent_Random_Int range 0 .. 9;
+
+  function Digit_Image (Digit : Integer_Digit) return Character_Digit
+  is
+     D_Image : constant array(Integer_Digit) of Character_Digit :=
+        ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+  begin
+     return D_Image(Digit);
+  end Digit_Image;
+
+
+  function Digit_Value (Digit : Character_Digit) return Integer_Digit 
+  is
+     D_Val : constant array(Character_Digit) of Integer_Digit :=
+        (0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+  begin
+      return D_Val(Digit);
+  end Digit_Value;
+
+  -----------
+  -- Value --
+  -----------
+
+  -- Random_Int_String contains a 20 digit unsigned integer, and a leading blank space ' '.
+  -- Every Parent_Random_Int (0 .. 2**64-1) can be represented as a 20 decimal digit.
+  -- The number must be right justified in Random_Int_Image.
+
+  function Value (Random_Int_Image : in Random_Int_String) return Parent_Random_Int
+  with Pre => 
+   (for all i in Random_Int_String'First+1 .. Random_Int_String'Last =>
+      Random_Int_Image(i) in Character_Digit) and
+      Random_Int_Image'First = 1 and
+      Random_Int_Image'Last = 21
+  is
+      Ten_to_the : constant array(Natural range 0 .. 19) of Parent_Random_Int :=
+        (10**00, 10**01, 10**02, 10**03, 10**04, 10**05, 10**06, 10**07, 10**08, 10**09,
+         10**10, 10**11, 10**12, 10**13, 10**14, 10**15, 10**16, 10**17, 10**18, 10**19);
+      Val : Parent_Random_Int := 0;
+  begin
+
+     for j in Random_Int_String'First+1 .. Random_Int_String'Last loop
+        Val := Val + Digit_Value (Random_Int_Image(j)) * Ten_to_the(Random_Int_String'Last - j);
+     end loop;
+
+     return Val;
+
+  end Value;
+
+  -----------
+  -- Value --
+  -----------
+
+  function Value (Coded_State : State_String) return State
+  is
+     S  : State;
+     use Multiply_with_Carry_Constants; -- for a0, a1, b
+     Seed_1_1st  : constant Positive := Coded_State'First;
+     Seed_j_1st : Positive;
+  begin
+
+     for j in State_Index loop
+        Seed_j_1st  := Seed_1_1st  + (j-State_Index'First) * Rand_Image_Width;
+        S.X(j) := Value (Coded_State(Seed_j_1st .. Seed_j_1st + Rand_Image_Width - 1));
+     end loop;
+
+     -- Finally, invalid state vals ought to raise Constraint_Error (should be
+     -- impossible and therefore something (probably I/O) went wrong.):
+
+     pragma Assert (S.X(MWC_id_0) /= 0);       -- Period=1 if equality holds.
+     pragma Assert (S.X(MWC_id_0) /= a0*b0-1); -- Period=1 if equality holds.
+--     if (S.X(MWC_id_0) = 0) or (S.X(MWC_id_0) = (a0*b0-1)) then -- Period=1
+--        raise Constraint_Error;
+--     end if;
+     pragma Assert (S.X(MWC_id_1) /= 0);       -- Period=1 if equality holds.
+     pragma Assert (S.X(MWC_id_1) /= a1*b1-1); -- Period=1 if equality holds.
+--     if (S.X(MWC_id_1) = 0) or (S.X(MWC_id_1) = (a1*b1-1)) then -- Period=1
+--        raise Constraint_Error;
+--     end if;
+--
+     pragma Assert (S.X(Xor_Shift_id) /= 0);   -- Period=1 if equality holds.
+     pragma Assert (S.X(Xor_Shift_id) in Random_Int);
+--     --  Period=1 of XOR_shift component generator:
+--     if S.X(Xor_Shift_id) = 0  or not  (S.X(Xor_Shift_id) in Random_Int) then
+--       raise Constraint_Error;
+--     end if;
+
+     return S;
+
+  end Value;
+
+  -----------
+  -- Image --
+  -----------
+
+  -- Every 64 bit Parent_Random_Int can be represented by a 20 decimal digit 
+  -- number. Random_Int_String has 21 elements, the first of which is always
+  -- a space ' '.
+
+  function Image (X : in Parent_Random_Int) return Random_Int_String
+  with Pre =>
+     Random_Int_String'Last - Random_Int_String'First + 1 > 20
+  is
+     Ten : constant Parent_Random_Int := 10;
+     Y : Parent_Random_Int := X;
+     D, Y_div_10 : Parent_Random_Int;
+     Result : Random_Int_String := (others => ' ');
+  begin
+
+     for j in reverse Random_Int_String'First+1 .. Random_Int_String'Last loop
+        Y_div_10 := Y / Ten;
+        D := Y - Ten * Y_div_10; -- Y mod 10, least significant digit.
+        Result(j) := Digit_Image (D); 
+        Y := Y_div_10;
+     end loop;
+
+     return Result;
+
+  end Image;
+
+  -----------
+  -- Image --
+  -----------
+
+  function Image (Of_State : State) return State_String is
+     Result : State_String := (others => ' ');
+     Y : Random_Int_String;
+     Seed_1_1st : constant Positive := Result'First;
+     Seed_j_1st : Positive;
+  begin
+     for j in State_Index loop
+        Y := Image (Of_State.X (j));
+        Seed_j_1st  := Seed_1_1st  + (j-State_Index'First) * Rand_Image_Width;
+        Result(Seed_j_1st .. Seed_j_1st+Rand_Image_Width-1) := Y;
+     end loop;
+
+     return Result;
+  end Image;
+
+end Disorderly.Basic_Rand;
+

@@ -1,0 +1,24 @@
+
+
+directory fourier contains:
+   two routines for calculating Discrete Fourier Transforms (DFT) in
+   O(N*Log(N)) time.  The standard FFT (Radix 8) is appropriate for
+   time-sensitive tasks. The Chirped FFT is usually the better choice 
+   for data analysis if speed is not essential.
+
+package Fourier8 contains:
+   a standard Radix 8 (decimation in frequency) Cooley-Tukey FFT.
+   Procedure FFT does a Discrete Fourier Transform on data sets
+   that are powers-of-2 in length. The package is pure.
+
+package Chirped contains:
+   procedure Chirped_FFT. Chirped_FFT performs a true Discrete Fourier 
+   Transform on data sets of arbitrary length N. Data set lengths are not
+   restricted to powers of 2 or any other special number. Like the FFT,
+   the Chirped_FFT running time scales as O(N*Log(N)).  Expect it to be an
+   order of magnitude slower than the standard FFT.
+
+procedures fourier8_demo_1 and Chirped_demo_1 are
+  demos that guide the user through the features of the two FFT's.
+
+

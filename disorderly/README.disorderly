@@ -1,0 +1,107 @@
+
+1. directory Disorderly contains 
+
+      a package of new Random Number Generators (package Disorderly.Random)
+        along with some test/demo routines (see 2 below).
+
+      a package of Random Deviates (package Disorderly.Random.Deviates)
+        with the following distributions: 
+
+        Uniform, Normal (Gaussian), Exponential, Lorentzian (Cauchy),
+        Poissonian, Binomial, Negative Binomial, Weibull, Rayleigh, 
+        Student_t, Beta, Gamma, Chi_Squared, Log_Normal, Multivariate_Normal.
+  
+   procedure Deviates_Demo_1 tests 
+     and demonstrates usage of random deviates (variates). The procedure uses
+     package Disorderly.Random.Deviates.
+
+   procedure Basic_Deviates_Demo_1 tests 
+     and demonstrates usage of random deviates: Disorderly.Basic_Rand.Deviates.
+     Uses Disorderly.Basic_Rand.
+
+   procedure Random_Demo_1 demonstrates 
+     usage of the random number generator: Disorderly.Random.Get_Random
+
+   procedure Basic_Rand_Demo_1 demonstrates 
+     usage of the random number generator: Disorderly.Basic_Rand.Get_Random
+
+   procedure bday_tst_1 is
+     a test that short period generators fail - (a variant of the
+     birthday test). At present, the GNAT compiler's generator has a
+     period of ~2**49 and fails this test. The test demonstates this.
+    
+   procedure twister_rank_tst_2 is
+     a test that all full-period, fully linear generators fail - Marsaglia's 
+     binary rank test. (For this reason the Mersenne_Twister generator 
+     fails this test.  The test demonstates this.)
+
+   verbage RATIONALE is
+     found at the beginning of file, Disorderly.ads. It contains a rationale
+     and a description of the design of the generator.
+
+   Here is some of it: 
+
+2. package Disorder:
+
+   procedure  Disorderly.Random.Get_Random:
+  
+   --  A non-linear pseudo random number generator optimized for
+   --  high statistical quality, and designed to be task-safe.  
+   --  The procedure meets several design goals:
+   --  
+   --  1. Uniform output in the range 0 .. 2**61-1.  
+   --     (ie, 61 random bits per call.)  
+   --     (2**61-1 is a Mersenne Prime; explanation in Disorderly.ads) 
+   --  2. Period > 2^246. (Actual period is about 1.813381 * 2^246.)
+   --  3. Period is the product of 4 large (8-byte) prime numbers. 
+   --  4. Generator is non-linear.
+   --  5. Generator is full-period. (2 of the 3 component generators are
+   --     full-period. The 3rd is optionally full-period.)
+   --  6. Generator is pure (the package is stateless) for convenient use
+   --     in multi-tasking simulations.
+   --  7. CPU time per call is constant (again for multi-tasking simulations).
+   --  8. Size of state per generator is 4 x 64 bits.
+   --  
+   --  Items 1-5 are general characteristics of good generators.
+   --  Items 6-8 are attributes desirable in a language with
+   --  built-in concurrency.
+ 
+   procedure  Disorderly.Basic_Rand.Get_Random:
+ 
+   --  A stripped down linear version of Disorderly.Random generator. Its
+   --  more than twice as fast as Disorderly.Random. I give it the unappealing 
+   --  name to encourage use of the  Disorderly.Random  generator instead.
+
+
+3. The directory contains some tests of randomness that I have found 
+   useful. Disorderly.Random should not fail any emperical test 
+   of randomness, but the tests here are useful for evaluating
+   the component generators used to construct Disorderly.Random.
+
+
+4. The directory also contains some useful math functions:
+
+   package Gamma:
+
+     function Log_Gamma (x : in Real) return Real;
+
+     -- Natural logarithm of Gamma function for positive real arguments.
+     -- Good to 32 decimal digits if it can be instantiated 
+     -- with a 32 digit Float.
+
+   package Chi_Gaussian_CDF:
+   
+     function Incomplete_Gamma (a : Real;  x : Real)  return Real;
+
+     function Chi_Squared_CDF
+
+     function Normal_CDF (x : Real) return Real;
+
+     -- The Incomplete Gamma function is used for calculating area under
+     -- the chi-squared distribution, and also the area under the
+     -- normalized Gaussian with unit width (the normal distribution).
+     -- The packages provide cummulative distribution functions (CDF) for 
+     -- the Chi squared distribution, and for the standard
+     -- normal distribution, so that p-values can be reliably calculated.
+
+
