@@ -1,0 +1,9 @@
+
+Package Spline provides routines for generating cubic spline fits to
+arbitrarily spaced data points, along with routines for interpolation,
+integration, and differentiation of the spline.
+
+Package Tridiagonal_LU implements Crout's method for LU decomposition
+of tri-diagonal matrices and linear equation solving. Tridiagonal_LU
+supports package Spline.
+

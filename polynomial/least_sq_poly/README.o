@@ -1,0 +1,9 @@
+
+Package Orthogonal_Polys provides routines that generate Gram-Schmidt
+orthogonal polynomials on arbitrarily spaced discrete grid points. The
+package also provides a routine for high order polynomial least-squares
+curve fitting.
+
+Procedures Opolys_tst_1 and Opolys_tst_2 demonstrate high
+order least squares polynomial fitting.
+
