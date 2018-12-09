@@ -1,0 +1,13 @@
+-- Used exclusively for invoking GNATprove, and the 
+-- GNAT SPARK toolset. 
+-- This file needs to be renamed 'rand.gpr' to invoke GNATprove.
+-- Only disorderly-basic_rand has been put through GNATprove.
+--
+project Rand is
+   for Source_Dirs use (".");
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-gnatwa");
+   end Compiler;
+end Rand;
+
