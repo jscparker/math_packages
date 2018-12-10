@@ -140,7 +140,7 @@ directory polynomial/spline contains:
 directory polynomial/clenshaw contains:
 
    package Clenshaw:
-      Generates, evaluates, and sums functions defined by recurrance
+      Generate, evaluate, and sum functions defined by recurrance
       relations. Recurrance relations for generating Laguerre,
       Generalized Laguerre, Legendre, Chebychev (1st and 2nd kind),
       Associated Legendre, and Hermite polynomials are given in the
