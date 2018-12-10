@@ -242,7 +242,6 @@ package body Gamma is
   end Log_Gamma_0_to_16;
 
   -- Just make sure that CF_Coeff's have not mutated:
-
   procedure Test_Stieltjes_Coefficients
   is
      Difference : Real;
@@ -278,4 +277,5 @@ package body Gamma is
   end Test_Stieltjes_Coefficients;
 
 end Gamma;
+
 
