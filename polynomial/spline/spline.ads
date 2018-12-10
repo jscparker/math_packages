@@ -25,8 +25,8 @@
 -- The X points are input as X_Data(i), the Y points as Y_Data(i).
 -- The spline interpolation algorithm creates a function F(X) such
 -- that (X, F(X)) passes through each the points input.
--- The function F(X) may then be used predict the value
--- of Y associated with a value of X that lies between Xm and Xm+1.
+-- The function F(X) can then be used predict the value of Y
+-- associated with a value of X that lies between Xm and Xm+1.
 --
 -- The interpolated curve is a different 3rd order polynomial for
 -- each Xm.  It gives the value of Y at point X near Xm according to:
@@ -45,8 +45,8 @@
 --
 -- Notes on algorithm
 --
--- A cubic spline is a sequence of third order polynomials S(X) that
--- connecting data points (X_i, Y_i):
+-- A cubic spline is a collection of third order polynomials S(X)
+-- connecting tabulated data points (X_i, Y_i):
 --
 --   S_i(X) = Y_i + B_i * (X-X_i) + C_i * (X-X_i)**2 + D_i * (X-X_i)**3
 --
@@ -55,9 +55,9 @@
 -- In what follows, X_i+1 - X_i will be called h_i, the standard variable
 -- in numerical analysis texts for DeltaX.  (In the code below these
 -- deltas will be called dX, and (B, C, D) will be (F(1), F(2), F(3)).)
--- Now from the requirement that the polynomials S_i are continuous
--- at the knots X = X_i, and have continuous 1st and 2nd derivatives
--- there, we immediately get the simultaneous equations,
+-- From the requirement that the polynomials S_i are continuous at the
+-- knots X = X_i, and have continuous 1st and 2nd derivatives there, you
+-- get the simultaneous equations,
 --
 --    Y_i+1 = Y_i + B_i * h_i + C_i * h_i**2 + D_i * h_i**3   (1)
 --

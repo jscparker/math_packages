@@ -37,7 +37,7 @@
 -- The actual Associated Legendre Polys are usually defined with (2m-1)!! times
 -- the Q_0 given above, but this leads to overflow, so its put in the Norm. 
 --
--- The m values for the Associated Legendre Polys are always non-negative.  When
+-- The m values for the Associated Legendre Polys are always non-negative. When
 -- you use Associated Legendre Polys to make spherical, (where m is in -l..l)
 -- then use Abs(m) to make the Assoc. Legendre Polys.
 -- Azimuthal quantum number l is equal to k + m.
@@ -50,7 +50,7 @@
 -- To make spherical harmonics, which
 -- are normalized respect integration in Phi also, you multiply the results
 -- of Clenshaw (the Associated Legendre Functions) by 
--- Sqrt [(2*l + 1) * (l-m)! * (2m-1)!! / 2*(l+m)!] and
+-- Sqrt [(2*l + 1) * (l-m)! * (2m-1)!! / 2*(l+m)!] and by
 -- [1.0 / Sqrt (2*Pi)] * Exp(i*m*Psi).
 --
 generic
@@ -82,7 +82,6 @@ package Spherical_Harmonics is
       X          : Real;
       Iterations : Positive := 1)      
       return Real;
-   --
    --  Uses Evaluate_Qs() to get array of Spherical_Harm(X) in k=[0, l].
    --
    --  For efficiency, ought to add another version of Spherical_Harm that

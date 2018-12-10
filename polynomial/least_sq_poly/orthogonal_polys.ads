@@ -6,7 +6,7 @@
 -- polynomial least-squares curve fitting: procedure Poly_Fit. 
 --
 -- The least-squares curve fitting routine could have been defined in
--- another package, but it's used for testing the rest of the package, 
+-- another package, but it turned out to be useful in the test procedures,
 -- and least-squares curve fitting is the primary application of the code.
 -- The algorithm is due to Shampine (1), who was the first to show how
 -- high order least squares polynomial fits could be performed on arbitrary

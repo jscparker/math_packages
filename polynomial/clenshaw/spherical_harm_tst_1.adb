@@ -8,8 +8,8 @@ procedure Spherical_Harm_Tst_1 is
 
    type Real is digits 15;
    
-   package Maths is new Ada.Numerics.Generic_Elementary_Functions (Real); 
-   use Maths;
+   package Math is new Ada.Numerics.Generic_Elementary_Functions (Real); 
+   use Math;
 
    type Base_Poly_Index is new Integer;
    

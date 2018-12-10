@@ -110,7 +110,7 @@
 -- Normalizing integral: Integral (Q_n(X)*Q_n(X)*W(X)) = Gamma(n+a+1)/n!
 --
 --
--- PROCEDURE Evaluate_Qs
+-- procedure Evaluate_Qs
 --
 -- The procedure calculates the value of functions Q_k at points
 -- X for each k in 0..Poly_ID.  These are returned in the array
@@ -133,7 +133,7 @@
 -- must multiply each element of Q(1..Poly_ID) by a different
 -- number to get an array of values of the normalized functions.
 --
--- FUNCTION Sum
+-- function Sum
 --
 -- This function sums the functions Q_k (at X) with coefficients given
 -- by the array C.      The result is returned as the function value.
@@ -202,7 +202,7 @@
 generic
 
    type Real is digits <>;
-   --  This package only sums functions of real variables.
+   --  Package only sums functions of real variables.
 
    type Base_Poly_Index_Type is range <>;
 

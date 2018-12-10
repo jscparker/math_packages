@@ -1,6 +1,6 @@
 
 -------------------------------------------------------------------------------
--- package body Orthogonal_Polys, Gram-Schmidt orthogonal polynomials on discrete grid points.
+-- package body Orthogonal_Polys, Gram-Schmidt polynomials on discrete grid points.
 -- Copyright (C) 2018 Jonathan S. Parker
 --
 -- Permission to use, copy, modify, and/or distribute this software for any

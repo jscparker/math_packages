@@ -153,9 +153,8 @@ package body Factorial is
   --
   --   good to 21 sig figures for x > 10
   --
-  -- based on trunc_error, and on comparison with rational poly-gamma function,
-  -- but very approximate!
-  --
+  -- Estimate based on trunc_error, and on comparison with rational
+  -- poly-gamma function, but approximate!
 
   function Log_Factorial (N : in Natural) return Real is
 

@@ -1,8 +1,8 @@
 --
 -- PACKAGE Chebychev_Quadrature
 --
--- The package provides tables and procedures for Gaussian Quadrature
--- based on Chebychev polynomials (Gaussian-Chebychev Quadrature).
+-- The package provides tables and procedures for Gaussian quadrature
+-- based on Chebychev polynomials (Gaussian-Chebychev quadrature).
 -- The number of points used in the quadrature (callocation points)
 -- is the generic formal parameter: No_Of_Gauss_Points.
 --
@@ -20,11 +20,6 @@
 --      --  Evaluate the function at the callocation points just once.
 --
 --      Get_Integral (F_val, X_Starting, X_Final, Area);
---
--- Notice that this package can be instantiated with extended precision
--- floating point - recommended if machine precision is necessary.
--- (The extended precision weights and Q-points are rounded to
--- normal precison after calculation, but its not terribly important.)
 --
 generic
 
