@@ -5,7 +5,7 @@ with Disorderly.Basic_Rand; use Disorderly.Basic_Rand;
 with Disorderly.Basic_Rand.Clock_Entropy;
 with Text_io; use text_io;
 
-procedure basic_rand_demo_1 is
+procedure Basic_Rand_Demo_1 is
 
    X : Random_Int;
 
@@ -13,6 +13,16 @@ procedure basic_rand_demo_1 is
    --  Must declare one of these for each desired independent stream of rands.
    --  To get successive random nums X from stream_k, 
    --  you then call Get_Random(X, stream_k);
+
+   procedure Pause is
+      Continue : Character;
+   begin
+      new_line; put ("Enter a character to continue: ");
+      get_immediate (Continue);
+      new_line;
+   exception
+      when others => null;
+   end Pause;
 
 begin
 
@@ -27,13 +37,7 @@ begin
    put_line ("Initiator1 by just 1 bit to get a complete change in all 3 of the");
    put_line ("64-bit Integers comprising the state. Each line below shows the three 64 bit");
    put_line ("integers of a state. Twelve independent states are printed on 12 lines.");
-   declare Continue : Character;
-   begin
-      new_line; put  ("Enter a character to continue: ");
-      get_immediate (Continue);
-   exception
-      when others => null;
-   end;
+   Pause;
 
    for k in Seed_Random_Int range 1..12 loop
      Reset (Stream_1, k, 4444, 55555);
@@ -46,13 +50,7 @@ begin
    put_line ("translates the string back to array of 3 Integers.");
    put_line ("We do this back and forth, and print the results below. Each string");
    put_line ("of 3 numbers (representing a State) should appear twice.");
-   declare Continue : Character;
-   begin
-      new_line; put  ("Enter a character to continue: ");
-      get_immediate (Continue);
-   exception
-      when others => null;
-   end;
+   Pause;
 
    for k in Seed_Random_Int range 1..4 loop
      Reset (Stream_1, k, 1, 1);
@@ -69,13 +67,7 @@ begin
    put_line ("initial states. The 12 initial states (strings of 4 numbers) are printed");
    put_line ("on the 12 lines below. If you get the same State twice in a row then the");
    put_line ("procedure failed to find a new and unique initial state.");
-   declare Continue : Character;
-   begin
-      new_line; put  ("Enter a character to continue: ");
-      get_immediate (Continue);
-   exception
-      when others => null;
-   end;
+   Pause;
 
    -- up top we wrote: use Disorderly.Random;
    -- so we can just call Clock_Entropy.Reset instead of
@@ -91,13 +83,7 @@ begin
 
    new_line(2);
    put_line ("Finally, print 8 random nums from Stream_1, the state just initialized.");
-   declare Continue : Character;
-   begin
-      new_line; put  ("Enter a character to continue: ");
-      get_immediate (Continue);
-   exception
-      when others => null;
-   end;
+   Pause;
 
    new_line;
    for k in 1..8 loop
@@ -105,5 +91,40 @@ begin
      new_line; put (Random_Int'Image (X));
    end loop;
 
-end;
+   new_line(2);
+   put_line ("Translate state Integers to a string, and then back to Integer. Do this");
+   put_line ("back and forth for a long time. If error detected, then report failure.");
+   put_line ("Nothing is printed if successful.");
+   Pause;
+
+   Clock_Entropy.Reset (Stream_1);
+
+   for k in Seed_Random_Int range 1 .. 2**26 loop
+     Get_Random (X, Stream_1);
+     if not Are_Equal (Stream_1, Value (Image (Stream_1))) then
+        raise Program_Error with "FAILURE in Image/Value routines";
+     end if;
+   end loop;
+
+   new_line; put  ("Finished part 1 of the final test.");
+
+   for k in Seed_Random_Int range 1 .. 2**22 loop
+     Reset (Stream_1, k, 1, 1);
+     if not Are_Equal (Stream_1, Value (Image (Stream_1))) then
+        raise Program_Error with "FAILURE in Image/Value routines";
+     end if;
+   end loop;
+
+   new_line; put  ("Finished part 2 of the final test.");
+
+   for k in Seed_Random_Int range 1 .. 2**20 loop
+     Clock_Entropy.Reset (Stream_1);
+     if not Are_Equal (Stream_1, Value (Image (Stream_1))) then
+        raise Program_Error with "FAILURE in Image/Value routines";
+     end if;
+   end loop;
+
+   new_line; put  ("Finished part 3 of the final test.");
+
+end Basic_Rand_Demo_1;
 
