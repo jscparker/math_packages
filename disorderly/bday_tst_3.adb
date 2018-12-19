@@ -24,28 +24,18 @@ with Sorted_Array;
 -- Test bday_tst_1 generates N random numbers (usually N = 2**25 + 2**24),
 -- and then counts how many of these random numbers occurred
 -- more than once in the set of N. 
--- Uses package  Sorted_Array  rather than a sorting routine to sort
--- the N random numbers. (Using Sorted_Array's  Insert_and_Sort  the test
--- is 3 times faster than it is using an NlogN sorting routine.)  The sorted
+--
+-- Uses package Sorted_Array to sort the N random numbers. The sorted
 -- data is then inspected to find the number of rands that occurred
 -- more than once in the sample (collisions). The number of collisions
 -- should follow a poisson distribution, which is tested with a Chi-square  
 -- goodness-of-fit test. This routine does not count the number of collisions 
--- in the spacings of the N random numbers. That's what Marsaglia's
--- birthday-spacings-test does.  The birthday-spacings-test uses smaller
--- arrays, but does not seem to be as sensitive as this test is in the present
--- problem.
+-- in the spacings of the N random numbers (Marsaglia's birthday-spacings-test).
 --
 -- You have a choice of 2 random num generators: 
 --
 --     Disorderly.Random    or    Ada.Numerics.Discrete_Random. 
 -- 
--- The standard GNAT version of Ada.Numerics.Discrete_Random has a period
--- of 2**49 (as of this writing). The short period guarantees that it will
--- flunk this test. (Anything with a period of 2**49 or less should
--- flunk.) But it requires at least 4 hrs. on fast pc to demonstrate 
--- the failure.
---
 
 procedure bday_tst_3 is
 
