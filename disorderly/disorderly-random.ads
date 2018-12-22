@@ -46,7 +46,9 @@
 -- For a general RATIONALE, see the parent package:   Disorderly.ads
 --
 
-package Disorderly.Random is
+package Disorderly.Random
+   with Spark_Mode => On
+is
 
    pragma Pure (Disorderly.Random);
 
@@ -67,7 +69,7 @@ package Disorderly.Random is
    --
    --  The number of bits returned by a RNG is rarely the actual
    --  number required by a particular application. Additional
-   --  work is necessary to put the random stream into the desired range,
+   --  work is necessary to put the random stream into the desired range
    --  and numeric type.
 
    subtype Seed_Random_Int is Random_Int range 1 .. Random_Int'Last;
@@ -94,23 +96,32 @@ package Disorderly.Random is
    --  Useful for saving state S on HD in text format.
 
    No_Of_Seeds       : constant := 4;
-   Seeds_Image_Width : constant := Parent_Random_Int'Size / 3;
-   Max_Image_Width   : constant := Seeds_Image_Width * No_Of_Seeds;
+   Rand_Image_Width  : constant := 20; -- 2^64-1 = 1.8446744073709551615 * 10^19
+   Max_Image_Width   : constant := Rand_Image_Width * No_Of_Seeds;
 
-   subtype State_String is String (1 .. Max_Image_Width);
+   subtype State_String is String(1 .. Max_Image_Width);
 
-   function Value (Coded_State : State_String) return State;
+   function Value (Coded_State : State_String) return State with
+      Pre => (for all i in State_String'Range => Coded_State(i) in '0' .. '9');
 
    function Image (Of_State : State) return State_String;
-   --  uses Random_Int'Image.  Is it always pure??
+
+   --  Detect invalid States, for example after input from HDD.
+
+   function Valid_State (S : in State) return Boolean;
+
+   --  Make an easier to read version of State_String by putting a space in front
+   --  of each of the 20 digit numbers: Formatted_Image().
+
+   Leading_Spaces               : constant := 1;
+   Formatted_State_String_Width : constant := (Rand_Image_Width + Leading_Spaces)*No_Of_Seeds;
+   subtype Formatted_State_String is String(1 .. Formatted_State_String_Width);
+
+   function Formatted_Image (Of_State : State) return Formatted_State_String;
+
+   function Are_Equal (State_1, State_2 : State) return Boolean;
 
 private
-
-   Full_Period_Quadratic_Desired : constant Boolean := False;
-   --  You can modify the  X := X*X mod P  generator so that it's full
-   --  period. Overhead is a bit noticable, so it's optional. It is
-   --  neither necessary nor clearly superior to use True above. The 
-   --  combination genrator needs only one full period component.
 
    subtype State_Index is Integer range 0..No_Of_Seeds-1;
 

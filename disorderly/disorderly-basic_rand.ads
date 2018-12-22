@@ -114,13 +114,15 @@ is
    function Valid_State (S : in State) return Boolean;
 
    --  Make an easier to read version of State_String by putting a space in front
-   --  of each of the 20 digits numbers: Formatted_Image().
+   --  of each of the 20 digit numbers: Formatted_Image().
 
    Leading_Spaces               : constant := 1;
    Formatted_State_String_Width : constant := (Rand_Image_Width + Leading_Spaces)*No_Of_Seeds;
    subtype Formatted_State_String is String(1 .. Formatted_State_String_Width);
 
    function Formatted_Image (Of_State : State) return Formatted_State_String;
+
+   function Are_Equal (State_1, State_2 : State) return Boolean;
 
 private
 
