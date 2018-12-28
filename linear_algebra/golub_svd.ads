@@ -71,7 +71,7 @@
 --  of a matrix, but if you want to SVD arbitrary sub-matrices of the
 --  matrix, then you must copy the submatrix to one satisfying the above 
 --  constraint. (That's the usual way in these routines anyway; the
---  overhead is negligible in comparison to the svd.)
+--  overhead is negligible in comparison to the SVD.)
 --
 generic
 
@@ -125,7 +125,7 @@ package Golub_SVD is
      --     failures if this is not enforced from the beginning.)
      --
      --  If that's not OK, then copy the matrix to one that satisfies
-     --  this constraint. Overhead from this O(N^2) copy is usually negligable.
+     --  this constraint. Overhead from this O(N^2) copy is usually negligible.
 
   Max_Allowed_No_of_Iterations : constant := 2**24;
   --  The QR algorithm iterates for the Singular Vals, but convergence is not
