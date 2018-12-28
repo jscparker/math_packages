@@ -1,7 +1,7 @@
 
 Directory /Linear_Algebra contains several
 
-   numberical linear algebra routines for real-valued matrices:
+   numerical linear algebra routines for real-valued matrices:
 
       QR_Symmetric_Eigen (Eigendecomposition for symmetric matrices.)
       Peters_Eigen       (Eigendecomposition for general square matrices.)
