@@ -29,7 +29,7 @@
 -- procedure Eigen_Decompose 
 --
 -- Works on arbitrary diagonal blocks of input matrix. For other blocks just
--- copy the matrix to desired position; copy overhead is negligable compared
+-- copy the matrix to desired position; copy overhead is negligible compared
 -- to the O(N^3) running time of the decomposition.
 --
 -- Procedure Eigen_Decompose is based on the Heinz Rutishauser ALGOL routine.
