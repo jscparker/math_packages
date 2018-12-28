@@ -25,9 +25,9 @@ Directory /Linear_Algebra contains several
         (Tridiagonalization of symmetric matrices.)
 
    Several of the routines are optimized for numerical accuracy, none
-   for speed. Enhanced Givens rotations are used everywhere (except in the
-   LU decompositions). Enhanced Givens rotations are sluggish, but improve
-   numerical accuracy. Reliability is generally favored over speed.
+   for speed. Enhanced Givens rotations are used everywhere (except in
+   LU decompositions). Enhanced Givens rotations are sluggish, but
+   improve numerical accuracy. Reliability is favored over speed.
 
 Information specific to particular routines
 
@@ -85,17 +85,18 @@ GNAT Compilation:
 
        gnatmake -gnatnp -O3 -ffast-math -funroll-loops -march=native xxx.adb
 
-    The -ffast-math switch usually doesn't help, but in one case (Golub_SVD) it's
-    big improvement. In other cases  -ffast-math can degrade numerical accuracy.
-
-    The switch -gnatN aggressively inlines, which is problem if you are calling
-    the compiler's random number generators. Apparently the presence of some
-    SPARK directives in the random number generators means that inlining is
-    disallowed, and compilation fails in these cases.
+    The -ffast-math switch usually doesn't help, but in one case
+    (Golub_SVD) it's big improvement. In other cases  -ffast-math can
+    degrade numerical accuracy.
+    The switch -gnatN aggressively inlines, which is problem if you
+    are calling the compiler's random number generators. Apparently the
+    presence of some SPARK directives in the random number generators
+    means that inlining is disallowed, and compilation therefore fails.
 
 Notes on Notation
 
-   The row and column ranges of a matrix are usually named Row_Index, Col_Index:
+   The row and column ranges of a matrix are usually named Row_Index,
+   Col_Index:
 
       subtype Row_Index is Integer range 0 .. 1024;
       subtype Col_Index is Integer range 0 .. 100;
@@ -110,8 +111,8 @@ Notes on Notation
 
    Orthogonal matrices are usually called Q, U, or V. That's where the Q 
    comes from in the QR decomposition of matrix A = Q*R, or the V in the 
-   SVD of A = U*W*V'. (The U probably stands for Unitary.) In the
-   SVD we use real numbers, so U is orthogonal as well as unitary: U'*U = I.
+   SVD of A = U*W*V'. (The U probably stands for Unitary.) In the SVD
+   we use real numbers, so U is orthogonal as well as unitary: U'*U = I.
 
       U : U_Matrix;
       Q : Q_Matrix;
@@ -121,17 +122,17 @@ Notes on Notation
       R : Matrix;
 
    Rows of numbers found in a matrix, and columns of numbers found in 
-   a matrix are called Row_Vector and Col_Vector respectively.  Notice that
-   the elements of a Row_Vector are indexed by indices that id the column in
-   in the matrix that the element resides in. A Col_Vector of a matrix is 
-   indexed by indices that id the row that the matrix element resides in.
-   That is how linear algebra works. So:
+   a matrix are called Row_Vector and Col_Vector respectively.  Notice
+   that the elements of a Row_Vector are indexed by indices that id the
+   column in in the matrix that the element resides in. A Col_Vector of
+   a matrix is indexed by indices that id the row that the matrix
+   element resides in. That's how linear algebra works. So:
 
       type Row_Vector is array(Col_Index) of Real;
       type Col_Vector is array(Row_Index) of Real;
 
-   Since we use the term "Vector" to name the rows and the columns of a matrix,
-   we can call the indices of an element of a matrix  (Row, Col).
+   Since we use the term "Vector" to name the rows and the columns of a
+   matrix, we can call the indices of an element of a matrix (Row, Col).
    The element of matrix A at position (Row, Col) is
 
       A(Row, Col) 
@@ -144,11 +145,11 @@ Notes on Notation
    Some routines operate on an arbitrary submatrices of matrix A. The
    corners (r, c) of this submatrix are given by:
 
-     (Starting_Row, Starting_Col)  -> to the eye, this is the upper left  corner.
-     (Final_Row, Final_Col)        -> to the eye, this is the lower right corner.
+     (Starting_Row, Starting_Col)  -> the upper left corner to the eye.
+     (Final_Row, Final_Col)        -> the lower right corner to the eye.
 
-   Standard terminology: rectangular matrices are said to be m x n: m rows and 
-   n columns.  Row always comes before Col.  
+   Standard terminology: rectangular matrices are said to be m x n: m
+   rows and n columns.  Row always comes before Col.  
 
       m = Final_Row - Starting_Row + 1
       n = Final_Col - Starting_Col + 1
