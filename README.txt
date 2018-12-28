@@ -101,16 +101,26 @@ directory linear_algebra contains:
 
    Several lin alg routines for real-valued matrices:
 
-      QR_Symmetric_Eigen (Eigendecomposition for symmetric matrices.)
-      Peters_Eigen       (Eigendecomposition for general square matrices.)
-      Golub_SVD          (SVD decomposition for rectangular matrices.)
-      Givens_QR          (QR decomposition for rectangular matrices.)
-      Jacobi_Eigen       (Jacobi eigendecomposition for symmetric matrices.)
-      Cholesky_LU        (Cholesky LU decomposition for positive definite matrices.)
-      Crout_LU           (Crout LU decomposition for square matrices.)
-      Banded_LU          (Crout LU decomposition for banded matrices.)
-      Hessenberg         (Hessenberg decomposition using Givens rotations.)
-      Tridiagonal        (Tridiagonalization of symmetric matrices.)
+      QR_Symmetric_Eigen 
+        (Eigendecomposition for symmetric matrices.)
+      Peters_Eigen       
+        (Eigendecomposition for general square matrices.)
+      Golub_SVD          
+        (SVD decomposition for rectangular matrices.)
+      Givens_QR          
+        (QR decomposition for rectangular matrices.)
+      Jacobi_Eigen       
+        (Jacobi eigendecomposition for symmetric matrices.)
+      Cholesky_LU        
+        (Cholesky LU decomposition for positive definite matrices.)
+      Crout_LU           
+        (Crout LU decomposition for square matrices.)
+      Banded_LU          
+        (Crout LU decomposition for banded matrices.)
+      Hessenberg         
+        (Hessenberg decomposition using Givens rotations.)
+      Tridiagonal        
+        (Tridiagonalization of symmetric matrices.)
 
    Several of the routines are optimized for numerical accuracy, none
    for speed. Enhanced Givens rotations are used everywhere except the
