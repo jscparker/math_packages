@@ -119,6 +119,8 @@ directory linear_algebra contains:
         (Crout LU decomposition for banded matrices.)
       Hessenberg         
         (Hessenberg decomposition using Givens rotations.)
+      Bidiagonal
+        (Bidiagonalization of rectangular matrices.)
       Tridiagonal        
         (Tridiagonalization of symmetric matrices.)
 
