@@ -21,6 +21,8 @@ Directory /Linear_Algebra contains several
         (Crout LU decomposition for banded matrices.)
       Hessenberg        
         (Hessenberg decomposition using Givens rotations.)
+      Bidiagonal
+        (Bidiagonalization of rectangular matrices.)
       Tridiagonal       
         (Tridiagonalization of symmetric matrices.)
 
@@ -46,6 +48,8 @@ Information specific to particular routines
       cholesky_lu_tst_1.adb
       crout_lu_tst_1.adb
       crout_lu_tst_2.adb
+      bidiag_tst_1.adb
+      tridiag_tst_1.adb
 
 Segmentation fault in Linux
 
