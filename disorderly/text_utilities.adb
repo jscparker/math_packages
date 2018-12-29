@@ -1,6 +1,6 @@
 
 -------------------------------------------------------------------------------
--- package body Disorderly.Basic_Rand, Linear Random Number Generator
+-- package body Text_Utilities; for Random and Basic_Rand.
 -- Copyright (C) 1995-2018 Jonathan S. Parker
 --
 -- Permission to use, copy, modify, and/or distribute this software for any

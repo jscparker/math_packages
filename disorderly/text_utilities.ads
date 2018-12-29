@@ -1,19 +1,5 @@
 
--------------------------------------------------------------------------------
--- package Disorderly.Basic_Rand, Linear Random Number Generator
--- Copyright (C) 1995-2018 Jonathan S. Parker
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
--------------------------------------------------------------------------------
+-- Test handling for Random and Basic_Rand. Rewritten to pass gnatprove.
 
 generic
 
@@ -43,7 +29,7 @@ is
   -- All state values State.X(i) are in a range that is correctly evaluated by
   -- function 'Value'.
   --
-  -- The calculation uses the modular arithmetic of modular type Parent_Random_Int. 
+  -- The calculation uses the modular arithmetic on modular type Parent_Random_Int. 
   -- If the image string encodes a number out-of-range of Parent_Random_Int,
   -- (i.e. > 2^64-1), then of course the function can't return that value.
 
