@@ -18,8 +18,8 @@
 -- instead he chooses to input a value for the 1st derivative at the
 -- end point then the spline (at that end point) is called clamped.
 --
--- These spline routines are for interpolation, not curve
--- fitting, so they are not useful for data with noise. (The
+-- These spline routines are for interpolation, not curve fitting,
+-- so they are not normally useful for data with noise. (The
 -- interpolated curve produced passes through all of the data
 -- points input.) The user inputs points (X1,Y1) (X2,Y2)..(Xn,Yn).
 -- The X points are input as X_Data(i), the Y points as Y_Data(i).
@@ -172,16 +172,16 @@ package Spline is
    --
    -- If Alpha = 1 and Beta = 0 then the boundary condition is that the
    -- the 2nd derivative of the curve Y_dot_dot is set to value
-   -- Boundary_Val.  (if then Boundary_Val is 0.0, then this is called a
-   -- Natural spline.)  If Alpha = 0 and Beta = 1 then the boundary condition
+   -- Boundary_Val. (if then Boundary_Val is 0.0, then this is called a
+   -- Natural spline.) If Alpha = 0 and Beta = 1 then the boundary condition
    -- is that the 1st derivative of the curve Y_dot is set to a value
-   -- Boundary_Val. This is called a clamped spline.  In the two special
+   -- Boundary_Val. This is called a clamped spline. In the two special
    -- cases given above, a unique spline exists and can be calculated by
-   -- the routines below.  In some cases mixed boundary conditions are
-   -- required, Alpha and Beta both non-zero.  In this case we can't
+   -- the routines below. In some cases mixed boundary conditions are
+   -- required, Alpha and Beta both non-zero. In this case we can't
    -- guarantee that a unique spline can be found satisfying this boundary
-   -- condition and satisfying the equations of continuity.  Use with
-   -- care under these circumstances.  This option is provided because
+   -- condition and satisfying the equations of continuity. Use with
+   -- care under these circumstances. This option is provided because
    -- some differential equations satisfy mixed boundary conditions.
 
    type Boundary is record
@@ -197,7 +197,7 @@ package Spline is
 
    -- Procedure Prepare_X_Data 
    -- prepares the data Arrays for use by Get_Spline. 
-   -- Its a separate procedure so that it can be removed
+   -- It's a separate procedure so that it can be removed
    -- from inner loops .. might call this once, and Get_Spline many 
    -- times. The procedure only cares about the X positions of the
    -- knots (X(i)). In many problems the knots remain constant, but
