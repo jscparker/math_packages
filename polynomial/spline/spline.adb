@@ -139,7 +139,7 @@ package body Spline is
      -- and end of the calculated spline.  So this stuff was input
      -- in the call to Prepare_X_Data, placed into variable
      -- X_Stuff. Now it's placed in variable Spline, so that it
-     -- it can be passed on to the interpolation procedures.  Its
+     -- it can be passed on to the interpolation procedures.  It's
      -- complicated, but less error prone this way.
  
      Spline.I_Start  := I_Start;
