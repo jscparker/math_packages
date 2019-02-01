@@ -170,7 +170,7 @@ package body Extended_Real.IO is
       end if;
       
       Mantissa_String (Start..Ending) := Ascii_Chunk(2..Ending-Start+2);
-      --  Ascii_Chunk always starts with ' ' or '-'.  Here its always positive.
+      --  Ascii_Chunk always starts with ' ' or '-'.  Here it's always positive.
       --  Its min length (Len) is always 2, even if chunk = '0'.
     
      end Add_To_Mantissa_String;
@@ -320,7 +320,7 @@ package body Extended_Real.IO is
    --
    --  Digit_0 + 10**8*(Digit_1 + 10**8*(Digit_2 + ... + 10**8*(Digit_n)))))
    --
-   --  Below, the 10**8 is called Ten_To_The_Chunk_Width.  Its a Global constant.
+   --  Below, the 10**8 is called Ten_To_The_Chunk_Width.  It's a Global constant.
    --  IMPORTANT to return ZERO if string has 0 length.  e_Real_Val requires it.
 
    function Integer_Value_Of (F : String) return e_Real is
@@ -417,8 +417,8 @@ package body Extended_Real.IO is
    --
    --  Notice that 
    --  1)  The Decimal point may be anywhere to the left of the E.
-   --  2)  The Leading sign is optional if its '+'.
-   --  3)  The sign of the exponent is optional if its '+'.
+   --  2)  The Leading sign is optional if it's '+'.
+   --  3)  The sign of the exponent is optional if it's '+'.
    --     
    --  Start_Of_Num is the first non-white space.  If the first char of the
    --  string is not white-space, then this will be Start_Of_Num. End_Of_Num
@@ -460,7 +460,7 @@ package body Extended_Real.IO is
    
 
       -- STEP 1. Strip away leading whitespace and sign. Start_Of_Num is the
-      -- first non-white space character.  If its '-' or '+', then increment 
+      -- first non-white space character.  If it's '-' or '+', then increment 
       -- Start_Of_Num by 1. 
 
       for I in X'Range loop
