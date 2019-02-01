@@ -15,7 +15,8 @@
 -- Given a set of X-axis grid points {X_0, ..., X_m} and a set of weights
 -- associated with those points {W_0, ..., W_m} there is a unique set of
 -- Gram-Schmidt orthogonal polynomials {Q_0(X), ..., Q_m(X)} that range in
--- degree from 0 to m, one less than the number of distinct data points.
+-- degree from 0 to m, where m is one less than the number of distinct
+-- data points.
 --
 -- This package defines routines for generating the polynomials Q_j(X)
 -- and routines for calculating values, derivatives, and integrals of
@@ -232,7 +233,7 @@
 -- How do we get the derivatives of the best-fit polynomial?  Just
 -- take the derivative of the Clenshaw recurrence formula given above.
 -- In the special case of orthogonal polynomials it is particulary
--- easy.  By differentiating the formula given above p times its easy
+-- easy.  By differentiating the formula given above p times it's easy
 -- to see that the p-th derivative of the D_m functions of X satisfy:
 --
 --   D_n+2(p,X) = 0
@@ -311,13 +312,13 @@ package Orthogonal_Polys is
    --  this constant cannot be greater than Data'Length - 1.
 
 
-   -- Section 1.
+   --  Section 1.
    --
-   -- Data structures for polynomials.
-   -- Type Poly_Data holds the actual values of individual Polys at X-axis
-   -- grid points X_j.  Also holds a normalization factor for the Poly.
-   -- Type Polynomial holds coefficients Alpha and Beta for generating
-   -- Polys recursively via the Gram-Schmidt method.  (Plus other things.)
+   --  Data structures for polynomials.
+   --  Type Poly_Data holds the actual values of individual Polys at X-axis
+   --  grid points X_j.  Also holds a normalization factor for the Poly.
+   --  Type Polynomial holds coefficients Alpha and Beta for generating
+   --  Polys recursively via the Gram-Schmidt method.  (Plus other things.)
 
    subtype Coeff_Index is Integer32 range 0..Max_Order_Of_Poly;
    --  Index for array of polynomial coefficients.  The Max_Order must be
@@ -358,11 +359,11 @@ package Orthogonal_Polys is
    --  to Get_Next_Poly.
 
 
-   -- Section 2.
+   --  Section 2.
    --
-   -- Construct the unique set of orthogonal polys associated with
-   -- X-axis grid points "X_axis" and weights "Weights", on range
-   -- First .. Last of Points_Index.
+   --  Construct the unique set of orthogonal polys associated with
+   --  X-axis grid points "X_axis" and weights "Weights", on range
+   --  First .. Last of Points_Index.
 
    procedure Start_Gram_Schmidt_Poly_Recursion
      (X_axis         : in     Data;
@@ -396,19 +397,19 @@ package Orthogonal_Polys is
    --  process of creating poly_0 and poly_1.
 
 
-   -- Section 3.
+   --  Section 3.
    --
-   -- Section contains procedures that operate on type Polynomial.
-   -- The procedures sum linear combinations of orthogonal polynomials, and
-   -- calculate values, derivatives and integrals of these sums.
-   -- The coefficients
-   -- of the polynomials in the linear combinations, called C_k,
-   -- will be stored in array C of type Poly_Sum_Coeffs.
-   -- If you want the value of a single Poly, its derivatives, or
-   -- integrals, then you use a delta-function for C_k: let C_k = 0.0
-   -- everywhere except at the index of the desired Poly, which you set to
-   -- 1.0.  Can also get coefficients of powers of X, but be aware that
-   -- this is an error prone process.
+   --  Section contains procedures that operate on type Polynomial.
+   --  The procedures sum linear combinations of orthogonal polynomials, and
+   --  calculate values, derivatives and integrals of these sums.
+   --  The coefficients
+   --  of the polynomials in the linear combinations, called C_k,
+   --  will be stored in array C of type Poly_Sum_Coeffs.
+   --  If you want the value of a single Poly, its derivatives, or
+   --  integrals, then you use a delta-function for C_k: let C_k = 0.0
+   --  everywhere except at the index of the desired Poly, which you set to
+   --  1.0.  Can also get coefficients of powers of X, but be aware that
+   --  this is an error prone process.
 
 
    function Max_Permissable_Degree_Of (P : Polynomials) return Coeff_Index;
@@ -448,7 +449,7 @@ package Orthogonal_Polys is
    --  integral of Q on [A, B] use Integral(B) - Integral(A).  Uses Clenshaw
    --  summation formula to get coefficients of powers of X, then integrates
    --  by summing the poly with Horner's rule.  Not the best way to do
-   --  quadrature in general, but its a good way to get integrals of
+   --  quadrature in general, but it's a good way to get integrals of
    --  polynomial least-square fits to data.
 
    subtype Derivative_List is Recursion_Coeffs;
@@ -473,7 +474,7 @@ package Orthogonal_Polys is
    --  of getting the coefficients (E) of powers of X.  The m-th derivative
    --  of the polynomial, evaluated at X = 0, equals E_m multiplied
    --  by m!.  In many ways this method may be superior to that used in
-   --  in procedure Get_Coefficients_Of_Powers_Of_X.  Its likely
+   --  in procedure Get_Coefficients_Of_Powers_Of_X.  It's likely
    --  to work in situations where Get_Coeffs... fails, (and vice-versa).
    --  Also, if you calculate a high degree polynomial fit, you may use
    --  Poly_Derivative to get just the first few E_m, rather than all
