@@ -30,7 +30,7 @@
 generic
 
    type Real is digits <>;
-   --  The independent variable.  Its called Time
+   --  The independent variable.  It's called Time
    --  throughout the package as though the differential
    --  equation dY/dt = F (t, Y) were time dependent.  Of cource
    --  it can have any meaning.
@@ -45,7 +45,7 @@ generic
    --  for a very wide range of problems.  If your Dynamical
    --  variable is really just a one-dimensional array, then you can still
    --  use it here (and with almost no loss in performance.)
-   --  Just give the Dyn_Index a range 0..0.  ( Its best to do
+   --  Just give the Dyn_Index a range 0..0.  ( It's best to do
    --  this to the Vector_Range_1 rather than Vector_Range_2.)
    --
    --  To use this routine one must reduce higher order differential
