@@ -137,7 +137,7 @@ package body Extended_Real.Elementary_Functions is
          return Y_0;
       end if;
 
-      -- STEP 2.  We may have to scale the argument if its near 1.  Newton_Raphson
+      -- STEP 2.  We may have to scale the argument if it's near 1.  Newton_Raphson
       -- doesn't do well there.  So we use identity:
       --
       --   arcsin(x) - arcsin(y) = arcsin(x*Sqrt(1-y*y) - y*Sqrt(1-x*x)),
@@ -209,7 +209,7 @@ package body Extended_Real.Elementary_Functions is
    --
    --  In all cases use Arccos(X) = Pi/2 - Arcsin(X).
    --  When Abs(X) < 0.5 we use  Pi/2 - Arcsin(X).  When
-   --  Abs(X) > 0.5 its better to use the following formula for Arcsin:
+   --  Abs(X) > 0.5 it's better to use the following formula for Arcsin:
    --      Arcsin(X) =  Pi/2 - 2*Arcsin(Sqrt((1-|X|)/2)).   (X > 0.0)
    --      Arcsin(X) = -Pi/2 + 2*Arcsin(Sqrt((1-|X|)/2)).   (X < 0.0)
    --
@@ -253,7 +253,7 @@ package body Extended_Real.Elementary_Functions is
          Result := (e_Quarter_Pi - Arcsin(X)) + e_Quarter_Pi;
       end if;
       --  e_Quarter_Pi is stored with more correct binary digits than
-      --  E_Half_Pi because its slightly less than 1.0.
+      --  E_Half_Pi because it's slightly less than 1.0.
 
      return Result;
 
@@ -592,7 +592,7 @@ package body Extended_Real.Elementary_Functions is
       Scale_Factor_2 : constant Integer := 2**J;
       --  Must be power of 2 for function call to Make_E_Digit.
       --  The optimal value increases with desired precision.  But higher
-      --  order terms in the series are cheap, so its not *too* important.
+      --  order terms in the series are cheap, so it's not *too* important.
 
       Inverse_Two_To_The_J : constant E_Digit
                                := Make_E_Digit (1.0 / Real (Scale_Factor_2));
@@ -662,7 +662,7 @@ package body Extended_Real.Elementary_Functions is
 
       -- STEP 2.  2nd stage of argument reduction.  Divide X_scaled by 2**J.
       -- Don't scale if arg is already small to avoid complications due
-      -- to underflow of arg to zero.  Arg may already be 0.  Its OK.
+      -- to underflow of arg to zero.  Arg may already be 0.  It's OK.
 
       if Exponent (X_Scaled_1) >= -2 then             -- it'll do, Zero OK here
          X_Scaled_2 := Inverse_Two_To_The_J * X_Scaled_1;
@@ -709,7 +709,7 @@ package body Extended_Real.Elementary_Functions is
       -- STEP 4.  Undo effect of 2nd stage of argument scaling.  Recall we
       -- divided the arg by 2**J, and found Exp(X_Scaled/2**J).  Now to get
       -- Exp(X_Scaled), must take Exp(X_Scaled/2**J)**2**J, which means
-      -- repeated squaring of Exp(X_Scaled/2**J) (J times).  Its more complicated
+      -- repeated squaring of Exp(X_Scaled/2**J) (J times).  It's more complicated
       -- than that because we calculated G(X) = Exp(X) - 1 - X (since G contains
       -- more correct digits than Exp, expecially for small X.)   So we
       -- use G(2X) = Exp(2X) - 1 - 2X = (G + (1 + X))*(G + (1 + X)) - 1 - 2X
@@ -920,7 +920,7 @@ package body Extended_Real.Elementary_Functions is
       -- to get Sin (Original_Arg).
       --
       --  MUST avoid underflow to Zero in this step.  So only if X_Scaled is big.
-      --  Actually, X_scaled = 0 may pass through, but its OK to start out 0.
+      --  Actually, X_scaled = 0 may pass through, but it's OK to start out 0.
 
       if Exponent (X_Scaled_1) >= -2 then             -- it'll do
          X_Scaled_2 := X_scaled_1 / Three_To_The_J;
@@ -1172,7 +1172,7 @@ package body Extended_Real.Elementary_Functions is
          end if;
       end if;
 
-      -- STEP 1b. If X_Scaled is nearing Pi/2 then its too big for Taylor's.
+      -- STEP 1b. If X_Scaled is nearing Pi/2 then it's too big for Taylor's.
       -- Must call Sin (Pi/2 - X_Scaled).  IMPORTANT: only do this for
       -- X_scaled > Pi/6, because Arcsin(X => 0.5) = Pi/6 is used to calculate
       -- Pi, and would get infinite recursive calls when Arcsin calls Cos
@@ -1195,7 +1195,7 @@ package body Extended_Real.Elementary_Functions is
       -- Sin(3*Theta) =  Sin(Theta)*(3 - 4*Sin(Theta)**2), to get Sin(Theta*3**J)
       -- Cos(3*Theta) = -Cos(Theta)*(3 - 4*Cos(Theta)**2), to get Cos(Theta*3**J).
       --
-      -- Its OK if X_scaled is 0 at this point, but not if the following
+      -- It's OK if X_scaled is 0 at this point, but not if the following
       -- forces it to underflow to 0.  Therefore only scale large args:
 
       if Exponent (X_Scaled_1) >= -2 then             -- it'll do
@@ -1743,7 +1743,7 @@ package body Extended_Real.Elementary_Functions is
 
       end loop;
 
-      Result := Y_0 * X_scaled;   -- now its  SQRT(X_scaled); Y_0 = 1/SQRT(X_scaled)
+      Result := Y_0 * X_scaled;   -- now it's  SQRT(X_scaled); Y_0 = 1/SQRT(X_scaled)
 
       Result := Result + Half_Digit * (X_scaled - Result*Result) * Y_0; --important
 
