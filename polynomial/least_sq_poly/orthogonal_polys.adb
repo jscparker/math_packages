@@ -30,7 +30,7 @@ package body Orthogonal_Polys is
 
   --  Converts Coeff_Index to Real in a way that simplifies things
   --  when Real is a private extended precision floating point type.
-  --  Its slow, but it doesn't slow down any critical inner loops.
+  --  It's slow, but it doesn't slow down any critical inner loops.
 
   function Make_Re (N : Coeff_Index) return Real is
     Result : Real := Zero;
@@ -299,7 +299,7 @@ package body Orthogonal_Polys is
          Inner_Product (Poly_0.Points, Poly_0.Points, First, Last, Weights);
       Poly_0.Degree  := 0;
 
-      -- Get the 1st order Polynomial.  Unnormalized, its just X - alpha;
+      -- Get the 1st order Polynomial.  Unnormalized, it's just X - alpha;
 
       X_Poly_0 := X_Scaled * Poly_0.Points;
       Alpha := 
@@ -426,7 +426,7 @@ package body Orthogonal_Polys is
    -- (In the end that will give us the coeffs of the actual poly, D_0.)
    -- Well, the first poly D_n is 0-th order and equals C(n).  The second poly, D_n-1,
    -- gets a contribution to its coefficient of X**1 from the X*D_n term.  That
-   -- contribution is the coefficient of X**0 in D_n.  Its X**0 coeff. gets a
+   -- contribution is the coefficient of X**0 in D_n.  Its X**0 coeff gets a
    -- contribution from C(n-1) and one from -Alpha(n)*D_n at X**0, or -Alpha(n)*D_n(0).
    -- Now we re-use the D
    -- polynomial arrays to store these coefficients in the obvious place.
@@ -463,7 +463,7 @@ package body Orthogonal_Polys is
    --
    -- where A_m = -(shl_1 - Alpha_m), B_m = Beta_m, and Y(m) = (C(m),0,0,....).
    -- In the end, D(0) should be an array that contains the Coefficients of Powers
-   -- of X.  The operator is not a standard matrix operator, but its linear and we
+   -- of X.  The operator is not a standard matrix operator, but it's linear and we
    -- know its inverse and forward operation, so Newton's method gives the
    -- iterative refinement.  The array D(k)(m) is possibly very large!
 
@@ -820,7 +820,7 @@ package body Orthogonal_Polys is
    -- How do we get the derivatives of the best-fit polynomial?  Just
    -- take the derivative of the Clenshaw recurrence formula given above.
    -- In the special case of orthogonal polynomials it is particularly
-   -- easy.  By differentiating the formula given above p times its easy
+   -- easy.  By differentiating the formula given above p times it's easy
    -- to see that the p-th derivative of the D_m functions of X satisfy:
    --
    -- p = order of derivative = 0:
