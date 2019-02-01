@@ -10,7 +10,7 @@ package Rectangular_Test_Matrices is
      (Zero_Diagonal,    -- all 1's with 0 down the diagonal
       Upper_Ones,       -- 
       Lower_Ones,       --
-      Zero_Cols_and_Rows,  -- 1st 4 rows and cols all 0; else its Upper_Ones
+      Zero_Cols_and_Rows,  -- 1st 4 rows and cols all 0; else it's Upper_Ones
       Random,       -- new seed each run. 16 bit elements (1 bit => 4x4 often singular)
       Frank, 
       Ding_Dong,   -- eigs clustered ~ pi; 99x99 matrix has lots of pi's to 18 sig. figs.
