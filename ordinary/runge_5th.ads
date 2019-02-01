@@ -20,7 +20,7 @@
 generic
 
    type Real is digits <>;
-   --  The independent variable has type Real.  Its called Time
+   --  The independent variable has type Real.  It's called Time
    --  throughout the package as though the differential
    --  equation dY/dt = F (t, Y) were time dependent.
 
