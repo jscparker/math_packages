@@ -13,7 +13,7 @@
 --
 -- If Scaling_Desired = True, then matrices are scaled prior to LU
 -- decomposition. First all the columns are scaled to near unity (in
--- 1-norm). Then the process is repeated for the rows.  Its not fast
+-- 1-norm). Then the process is repeated for the rows.  It's not fast
 -- but occasionally improves the decomposition.
 --
 -- The LU form of A can then be used to solve simultaneous linear
