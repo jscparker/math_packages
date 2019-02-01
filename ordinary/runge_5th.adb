@@ -39,7 +39,7 @@ package body Runge_5th is
  --  Function to multiply vector G times matrix K.
  --
  --  This works only for the RKPD coefficients given above.
- --  Its optimized to take into account all of
+ --  It's optimized to take into account all of
  --  Zero's in array A; review A in the package above.
  --  The general formula is:
  --
@@ -319,7 +319,7 @@ package body Runge_5th is
       -- Special Case:    Stage = Stages'First;
       -- In the initial stage the prince-dormand method allows us to
       -- reuse the most recently calculated Next_Deriv (from the previous
-      -- step). That's why its effectively a 6 stage method, rather than 7.
+      -- step). That's why it's effectively a 6 stage method, rather than 7.
 
        Make_New_Corrections_K:
        declare
