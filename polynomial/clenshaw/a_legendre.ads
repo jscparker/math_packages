@@ -39,7 +39,7 @@
 --            = (k+2*m)! / ((k + m + 0.5) * k! * (2m-1)!!**2)
 --
 -- The actual Assoc. Legendre Functions are usually defined with (2m-1)!! times
--- the Q_0 given above, but this leads to overflow, so its put in the Norm. 
+-- the Q_0 given above, but this leads to overflow, so it's put in the Norm. 
 -- The m values for the Assoc. Legendre Polys are always non-negative. When
 -- you use Assoc. Legendre Polys to make spherical, (where m is in -l..l)
 -- then use Abs(m) to make the Associated Legendre Functions.
