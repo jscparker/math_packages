@@ -6,7 +6,7 @@
 --
 --    Lower limit on precision is 28 decimals. No upper limit is
 --    enforced. All internal arithmetic is done on 64-bit Integers,
---    so its most efficient on 64-bit CPU's.  The package is Pure. 
+--    so it's most efficient on 64-bit CPU's.  The package is Pure. 
 --    Floating point attributes (Ada 95) are implemented as function
 --    calls. The package exports standard floating point operators:
 --    "*", "+", "/", "**", "Abs", "<", ">", "<=" , ">=", etc. 
@@ -118,7 +118,7 @@
 -- Constants and overflow/underflow/constraint_error conventions.
 --
 -- To test an arbitrary X : e_Real to see if X is Zero or infinity use the
--- function Are_Equal (X, Zero) etc.  Its written to make the test efficiently.
+-- function Are_Equal (X, Zero) etc. It's written to make the test efficient.
 --
 -- Underflows are to (unsigned) Zero; overflows to (signed) infinity:
 --
@@ -155,8 +155,8 @@
 -- rounds away guard digits of operands before performing the comparison.
 -- All of them perform their comparisons out to the final guard digit.
 -- To reduce much confusion, I decided to leave rounding entirely up to the
--- user, with Round_Away_....  Whether its best to round or not
--- depends on the algorithm.  In a lot of algorithms its better to
+-- user, with Round_Away_....  Whether it's best to round or not
+-- depends on the algorithm.  In a lot of algorithms it's better to
 -- round before you use the "Are_Equal" operator, and better not to round
 -- when you use the "<" and ">" operators.
 --
@@ -193,7 +193,7 @@
 --
 -- More efficient operations.  The "Real" is not your ordinary real, but
 -- something in the range 0.0 .. Radix-1, and integer valued, though it
--- can have an negative or positive exponent.  So its not very appropriate
+-- can have an negative or positive exponent.  So it's not very appropriate
 -- for general use; 
 --
 -- The Real * Extended operations can be particularly efficient if
@@ -321,7 +321,7 @@ package Extended_Real is
    -- SECTION II.  Standard operators.
    --
    -- To reduce much confusion, rounding is entirely up to the
-   -- user, with Round_Away_Guard_Digits().  Whether its best to round or not
+   -- user, with Round_Away_Guard_Digits().  Whether it's best to round or not
    -- depends on the algorithm.  For example, in some cases it is better to
    -- round before you use the "Are_Equal" operator, and better not to round
    -- when you use the "<" and ">" operators.  (see intro.)
@@ -386,7 +386,7 @@ package Extended_Real is
    --
    --  if X is greater than about 10**Real'Digits.
    --  So X = 2**62 raises Constraint_Error if Real'Digits = 15.
-   --  Its really just for making e_Reals out of small ints: +7.
+   --  It's really just for making e_Reals out of small ints: +7.
 
 
    -- SECTION IV.  Ada9X oriented attributes.
@@ -680,7 +680,7 @@ private
    --  above (search for No_Of_Usable_Bits_In_Digit and follow instructions)
    --  and 2 changes in body (compiler will tell you where). Also comment
    --  out next 3 statements.  Amazingly, it worked nicely last time I did it.
-   --  Its slow, and it only makes sense when 64 bit ints are bad or missing.
+   --  It's slow, and it only makes sense when 64 bit ints are bad or missing.
 
 
    type D_Type is range -2**63+1 .. 2**63-1;
@@ -728,7 +728,7 @@ private
 
    -- For efficiency, we need an optimized (Real * Extended)
    -- operation.  So define type e_Digit, a single real number with
-   -- an exponent.  Its a real number that's restricted  to integral values
+   -- an exponent.  It's a real number that's restricted  to integral values
    -- in the range to 0..Radix-1.
 
    type e_Digit is record
