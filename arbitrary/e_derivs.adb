@@ -209,7 +209,7 @@ package body e_Derivs is
   -- keep it a reduced derivative.  Notice that the affect of this repeated
   -- multiplication of Fj+1 by j+1 is simply to unreduce F.  If F had been
   -- introduced as unreduced to begin with, then the formula would be identical
-  -- but without the j+1 factor.  So its both more efficient and more accurate
+  -- but without the j+1 factor.  So it's both more efficient and more accurate
   -- to unreduce F at the beginning rather than along the way.  If do that
   -- then the final formula for the reduced derivative d^k Fj(G(t)) becomes:
   --
@@ -777,7 +777,7 @@ package body e_Derivs is
   --  said calculation of S is numerically imperfect, then the iteration above
   --  may produce improved values of S.  If the Coefficients of
   --  the polynomial B are numerically poor, then this effort will be wasted.
-  --  Its often the case with
+  --  It's often the case with
   --
   --  Iterative refinement
   --
