@@ -20,11 +20,11 @@ package Factorial is
    pragma Pure (Factorial);
 
    function Log_Factorial (N : in Natural) return Real;
-   -- For N >= 0.  Natural logarithm of N!
+   --  For N >= 0.  Natural logarithm of N!
    --
-   -- Uses Stieltjes' Continued Fraction method above N=20.
-   -- Probably good to a lot better than 32 digits (if you can find
-   -- that many digits).
+   --  Uses Stieltjes' Continued Fraction method above N=20.
+   --  Probably good to a lot better than 32 digits (if you can find
+   --  that many digits).
    
    procedure Test_Stieltjes_Coefficients;
    procedure Test_Log_Factorial_Table;
