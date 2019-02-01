@@ -12,7 +12,7 @@ package Extended_Real.IO is
    --  Minimum length of Aft is 12.  If less, it gets set to 12.
    --  The number of digits in the result is the minimum of the 3 quantities:
    --  Aft+1, Max_No_Of_Digits, and Max_Practical_String_Length.  Aft is
-   --  input by the user: its the number of decimal digits beyond the
+   --  input by the user: it's the number of decimal digits beyond the
    --  decimal point.  Max_No_Of_Digits is slightly greater than the
    --  Desired_Decimal_Digit_Precision, the generic parameter. (see below.)
 
