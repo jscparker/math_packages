@@ -105,7 +105,7 @@ Notes on Notation
       subtype Row_Index is Integer range 0 .. 1024;
       subtype Col_Index is Integer range 0 .. 100;
 
-   Sometimes its:  R_Index, C_Index.
+   Sometimes it's:  R_Index, C_Index.
 
    Arbitrary input matrices in linear algebra are called A.  
    This will never change. Its like alice and bob in cryptography.
