@@ -64,8 +64,8 @@ directory Disorderly contains:
    package Disorderly.Random:
       A long-period high-quality non-linear Random Number Generator.
       Procedure Get_Random produces 61 random bits per call. The
-      package is pure, and run-time per call constant - designed to
-      be suitable for multi-tasking sumulations.
+      package is pure, and run-time per call is constant - designed
+      to be suitable for multi-tasking simulations.
    package Disorderly.Basic_Rand:
       a long-period high-quality linear Random Number Generator.
    package Disorderly.Random.Deviates:
