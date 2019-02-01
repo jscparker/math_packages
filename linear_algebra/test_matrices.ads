@@ -63,10 +63,10 @@ package Test_Matrices is
       Gregory,     -- symmetric, all but 2 of the eigs = 1.
       Anti_Hadamard_Upper_Tri, -- 1 small sing.val, non singular
       Anti_Hadamard_Lower_Tri, -- 1 small sing.val, non singular
-      Wilkinson_Plus,     -- strictly its W+ only for odd N.
+      Wilkinson_Plus,     -- strictly it's W+ only for odd N.
       Wilkinson_Plus_2I,
       U_Hard,             -- slow convergence on Golub SVD, all 1's but 1st col=0
-      Zero_Cols_and_Rows, -- 1st 3 rows and cols all 0; else its 1.
+      Zero_Cols_and_Rows, -- 1st 3 rows and cols all 0; else it's 1.
       Easy_Matrix, 
       Symmetric_Banded,   -- not diagonally dominant, moderately ill-conditioned
       Small_Diagonal,     -- but not symmetric
