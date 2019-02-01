@@ -96,7 +96,7 @@ package body Fourier8 is
 
      Exp_Table.Current_Size_Of_Exp_Table := Padded_Data_Index_Last;
      --  This global variable is initalized to 0. This tells the FFT routine
-     --  whether to reconstruct Exp_Table when its called again.  The table
+     --  whether to reconstruct Exp_Table when it's called again.  The table
      --  must be reconstructed whenever Padded_Data_Index_Last changes.
 
   end Make_Exp_Table;
