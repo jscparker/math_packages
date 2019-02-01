@@ -8,7 +8,7 @@
 --
 --    Lower limit is 28 decimals, no upper limit is enforced.
 --
---    All internal arithmetic is done on 64-bit Integers, so its most
+--    All internal arithmetic is done on 64-bit Integers, so it's most
 --    efficient on 64-bit CPU's.  The package is Pure. 
 --    Floating point attributes (Ada 95) are implemented as function calls.
 --    The package exports standard floating point operators:
