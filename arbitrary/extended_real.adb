@@ -455,7 +455,7 @@ package body Extended_Real is
    --  The function yields the value [x] when X > 0.0.  ([x] by defn
    --  is floor: largest int less than or equal to x.)  When x is zero,
    --  the result has the sign of X; a zero result otherwise has a
-   --  positive sign.  When X < 0.0, then its [x]+1 unless [x] = x.
+   --  positive sign.  When X < 0.0, then it's [x]+1 unless [x] = x.
    --  Notice assume Digit_Index'Last = Ultimate_Digit.
 
    function Truncation
@@ -796,7 +796,7 @@ package body Extended_Real is
       if Are_Equal (Del, Half) then
 
         --  Must find out if Result (= Truncation (X) = int) is even or not.
-        --  If its not even, then add (or subtract) One as above.
+        --  If it's not even, then add (or subtract) One as above.
         --  To find out, must examine lowest order bit of least significant
         --  digit.
 
@@ -804,7 +804,7 @@ package body Extended_Real is
         --  If Least_Significant_Digit = 0 then Exponent (Result) = +1 cause
         --  it returns the normalized Exp.
 
-        if (Least_Significant_Digit REM 2 = 1) then  -- its odd
+        if (Least_Significant_Digit REM 2 = 1) then  -- it's odd
             if X.Is_Positive then
               Result := Result + One;  -- because Trunc chopped it toward zero
             else
@@ -1621,7 +1621,7 @@ package body Extended_Real is
       -- Step 1. Now do things more sytematically.
       -- Check signs.  Notice that these give us efficient way to
       -- check sign of a number.  If X is negative, this is fast because
-      -- Zero is classified as positive.  (If want to find if its Pos., use
+      -- Zero is classified as positive.  (If want to find if it's Pos., use
       -- not (X < Zero). Since they aren't both 0 go home early if:
 
       if X.Is_Positive and not Y.Is_Positive then
@@ -2278,7 +2278,7 @@ package body Extended_Real is
       -- Step 5.  Do everything except the carrying or borrowing.
       -- We were careful about subtracting the smaller from the larger, so
       -- the following steps can be done before or after the carrying, (provided
-      -- its only 2 numbers are summing).
+      -- only 2 numbers are being summed).
 
       if Final_Sign_Is_Positive then
         Z.Is_Positive := True;
@@ -3564,7 +3564,7 @@ package body Extended_Real is
          return (Y + Make_Extended (X));
       end if;
 
-      -- Step 1. Now they either both Positive or both Neg.  Sum them if its
+      -- Step 1. Now they either both Positive or both Neg.  Sum them if it's
       -- easy and return with the right sign.  Start by finding the larger
       -- number, Exponent-wise. *Notice Y.Exp = X.Exp is classified as Y_Is_Max.*
 
@@ -3654,7 +3654,7 @@ package body Extended_Real is
    -- Next_Digit's are too small to contribute to Quotient.
    --
    -- Few remarks: Next_Digit may not really be the next digit in Quotient.
-   -- It should usually be, but sometimes its too small, and very rarely, its
+   -- It should usually be, but sometimes it's too small, and very rarely, it's
    -- too large.  Nevertheless, you increment Quotient by Next_Digit and
    -- converge on the answer.  Also, when Next_Digit is too large, Remainder
    -- becomes negative, and one *subtracts* the next Next_Digit from quotient,
@@ -3725,7 +3725,7 @@ package body Extended_Real is
       -- Inverse_Real_Y      is in range [1.0/(Radix-Eps) .. 1.0].
       -- Real_Remainder_Of_X is in range [1.0 .. (Radix-Eps)].
       -- Next_Digit is Real_Floor (Real_Remainder_Of_X*Inverse_Real_Y) where
-      -- the product has been multiplied by Radix if its less than 1.0.
+      -- the product has been multiplied by Radix if it's less than 1.0.
       -- Possible range of Next_Digit: Max is Floor (Radix-eps / 1.0), which
       -- is Radix-1.  Min is Floor (Radix * (1.0 / (Radix-eps))) = 1.0.
 
@@ -3743,7 +3743,7 @@ package body Extended_Real is
 
     Iteration: for Iter in e_Integer range 1..Max_Allowed_Iterations loop
 
-      -- Initialized to X, so its not zero.  Must lead with a nonzero digit.
+      -- Initialized to X, so it's not zero.  Must lead with a nonzero digit.
       -- Important here to sum ALL three leading digits of Remainder_Of_X.
 
       Real_Remainder_Of_X :=   Real (Remainder_Of_X.Digit(0))
@@ -3999,7 +3999,7 @@ package body Extended_Real is
      -- Remember, X and Y are normalized and we've tested for 0's, so
      -- both are in the range 1..Radix-1.
 
-     Real_Y         := Real (Y.Digit);        -- >= 1.0, since its quantized.
+     Real_Y         := Real (Y.Digit);        -- >= 1.0, since it's quantized.
      Inverse_Real_Y := Real_One / Real_Y;
 
      --  Pretend all quantities are positive till end.
@@ -4247,7 +4247,7 @@ package body Extended_Real is
       end loop;
 
       --  Under flow to zero.  THe "/" operator should correctly do this, but
-      --  its important to other routines, so make sure its done right here:
+      --  it's important to other routines, so make sure it's done right here:
 
       if Product.Is_Infinite and N < 0 then
          return Zero;
