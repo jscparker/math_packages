@@ -130,7 +130,7 @@ package body Jacobi_Eigen is
            Q_tr(j, j) := One;
         end loop;
      end if;
-     --  Don't fill (potentially) giant array with 0's unless its needed.
+     --  Don't fill (potentially) giant array with 0's unless it's needed.
      --  If Eigenvectors_Desired=False, we can free up much memory if
      --  this is never touched.
 
