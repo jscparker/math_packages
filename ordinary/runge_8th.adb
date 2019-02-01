@@ -41,7 +41,7 @@ package body Runge_8th is
  --  Function to multiply vector G times matrix K.
  --
  --  This works only for the RKPD coefficients given above.
- --  Its optimized to take into account all of
+ --  It's optimized to take into account all of
  --  Zero's in array A; review A in the package above.
  --  The general formula is:
  --
