@@ -35,7 +35,7 @@
 --                 = 2*(k+2*m)! / ((2*k + 2*m + 1) * (k!*(2m-1)!!**2))
 --
 -- The actual Associated Legendre Polys are usually defined with (2m-1)!! times
--- the Q_0 given above, but this leads to overflow, so its put in the Norm. 
+-- the Q_0 given above, but this leads to overflow, so it's put in the Norm. 
 --
 -- The m values for the Associated Legendre Polys are always non-negative. When
 -- you use Associated Legendre Polys to make spherical, (where m is in -l..l)
