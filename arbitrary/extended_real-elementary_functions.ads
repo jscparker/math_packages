@@ -7,7 +7,7 @@
 -- Newton-Raphson iteration gives the inverse: F(X) = X**(-1/N),
 -- the reciprocal of the Nth root of X.  Newton-Raphson is used directly to get
 -- Sqrt, Inverse, and Inverse_Nth_root. Inverse(X) is the reciprocal of
--- of X.  Its usually faster than the "/" function, (One / X).
+-- of X.  It's usually faster than the "/" function, (One / X).
 --
 -- Newton-Raphson iteration is used to calculate Y = F(a) when F's inverse
 -- function G(Y) is known.  (G satisfies G(F(a)) = a.)  Say we want Y = F(a),
