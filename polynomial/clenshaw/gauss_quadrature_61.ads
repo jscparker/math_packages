@@ -17,14 +17,14 @@
 --
 --      Get_Integral (F_val, X_Starting, X_Final, Area, Rough_Error);
 --
--- The array X_gauss(I) is the set of points in X that the
--- the function F is evaluated at.  The function is multiplied by
+-- The array X_gauss(I) is the set of points X that the
+-- function F is evaluated at. The function is multiplied by
 -- the Gauss_Weights associated with each of these points, and
--- result is summed to give the area under the curve in the interval
--- defined above.
+-- result is summed to give the area under the curve in the
+-- interval defined above.
 --
 -- Rough_Error is usually wrong by orders of magnitude.  But
--- its usually larger than the actual error. Works best when
+-- it's usually larger than the actual error. Works best when
 -- error is near machine epsilon.
 --
 generic
