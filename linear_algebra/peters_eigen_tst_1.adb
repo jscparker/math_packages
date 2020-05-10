@@ -51,8 +51,7 @@ procedure peters_eigen_tst_1 is
    subtype Index is Integer range Index_First .. Matrix_Storage_Size;
 
    Starting_Col : constant Index := Index'First;
- --Final_Col    : constant Index := Starting_Col + Size_Of_Test_Matrix - 1;
-   Final_Col    : constant Index := Starting_Col + 0;
+   Final_Col    : constant Index := Starting_Col + Size_Of_Test_Matrix - 1;
 
    type Matrix is array(Index, Index) of Real;
    pragma Convention (Fortran, Matrix);
