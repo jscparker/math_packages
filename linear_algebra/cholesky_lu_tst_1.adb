@@ -16,6 +16,9 @@ procedure cholesky_lu_tst_1 is
    Final_Index    :          Index := Index'Last  - 0;
 
 
+   type Matrix is array(Index, Index) of Real;
+
+
    package Math is new Ada.Numerics.Generic_elementary_functions(Real);
    use Math; --for sqrt
    package lu is new Cholesky_LU (Real, Index, Matrix);
@@ -26,9 +29,6 @@ procedure cholesky_lu_tst_1 is
    use iio;
    package Make_Square_Matrix is new Test_Matrices (Real, Index, Matrix);
    use Make_Square_Matrix;
-
-
-   type Matrix is array(Index, Index) of Real;
 
    type Real_Extended  is digits 15;   -- or 18 on intel
 
