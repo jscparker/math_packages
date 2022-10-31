@@ -14,16 +14,16 @@ procedure cholesky_demo_1 is
    Starting_Index : constant Index := Index'First + 0;
    Max_Index      :          Index := Index'Last  - 0;
 
+   type Matrix is array(Index, Index) of Real;
+   --  Row major form is appropriate for Matrix * Row_Vector
+   --  operations, which dominate the algorithm in procedure Solve.
+
    package lu is new Cholesky_LU (Real, Index, Matrix);
    use lu;
    package rio is new Float_IO(Real);
    use rio;
    package iio is new Integer_IO(Integer);
    use iio;
-
-   type Matrix is array(Index, Index) of Real;
-   --  Row major form is appropriate for Matrix * Row_VectorVector
-   --  operations, which dominate the algorithm in procedure Solve.
 
    Zero_Vector : constant Row_Vector := (others => 0.0);
    C, C_Inverse : Matrix := (others => (others => 0.0));
