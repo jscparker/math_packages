@@ -16,8 +16,8 @@
 ---------------------------------------------------------------------------
 
 with Ada.Numerics.Discrete_Random;
---with Ada.Numerics.Generic_Elementary_Functions;
---with Ada.Numerics;
+with Ada.Numerics.Generic_Elementary_Functions;
+with Ada.Numerics;
 
 package body Test_Matrices is
 
@@ -30,8 +30,8 @@ package body Test_Matrices is
 
   Max_Allowed_Real : constant Real := Two ** (Real'Machine_Emax - 20);
 
-  --package Math is new Ada.Numerics.Generic_Elementary_Functions(Real);
-  --use Math;
+  package Math is new Ada.Numerics.Generic_Elementary_Functions(Real);
+  use Math;
 
   --  for Random nums:
  
@@ -88,10 +88,11 @@ package body Test_Matrices is
   -- if you use  No_of_Bits = 2, then get 0.75, 0.5, 0.25, 0.0.
  
   function Real_Random (No_of_Bits : Bits_per_Ran) return Real is
-    N : constant Integer := Integer (No_of_Bits);
+     N : constant Positive := Positive (No_of_Bits);
+     pragma Assert (N <= 32);
   begin
  
-    return Two**(-N) * Real (Discrete_32_bit.Random (Random_Stream_id) / 2**(32-N));
+     return Two**(-N) * Real (Discrete_32_bit.Random (Random_Stream_id) / 2**(32-N));
  
   end Real_Random;
  
@@ -1846,6 +1847,9 @@ package body Test_Matrices is
           s := 0.25;
           c := 0.96824583655185422129;
  
+        --s := 0.125;
+        --c := 0.99215674164922147143;
+ 
           for Row in Starting_Index .. Max_Index loop
           for Col in  Row .. Max_Index      loop
              M(Row, Col) := -c;
@@ -1865,13 +1869,29 @@ package body Test_Matrices is
              end loop;
           end loop;
  
-          for Col in Starting_Index+1 .. Max_Index loop
-             for Row in Starting_Index .. Max_Index loop
-                M(Row, Col) := M(Row, Col) / (c);
-             end loop;
-          end loop;
- 
        end;
+ 
+       M := M + Matrix_Addend;
+
+    when GKS =>
+
+       -- Lower triangular whose j-th diagonal element is 1/sqrt(j)
+       -- and whose (i,j) element is -1/sqrt(i) for i>j.
+       --
+       -- This is the transpose of the usual GKS matrix.
+ 
+       M := (others => (others => Zero));     --essential init.
+       --the 0.0 is essential.
+ 
+       for Row in Starting_Index .. Max_Index loop
+       for Col in Row .. Max_Index loop
+          M(Col, Row) := -One / Sqrt (Real (Row) - Real (Starting_Index) + 1.0);
+       end loop;
+       end loop;
+
+       for Col in Starting_Index .. Max_Index loop
+          M(Col, Col) := One / Sqrt (Real (Col) - Real (Starting_Index) + 1.0);
+       end loop;
  
        M := M + Matrix_Addend;
  
